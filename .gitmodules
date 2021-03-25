@@ -1,0 +1,3 @@
+[submodule "QMLVirtualJoystick"]
+	path = qml/QMLVirtualJoystick
+	url = git@github.com:martonmiklos/QMLVirtualJoystick.git

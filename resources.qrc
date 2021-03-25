@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/deviceIcons/shell.png</file>
+    </qresource>
+</RCC>
