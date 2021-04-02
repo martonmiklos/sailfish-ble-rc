@@ -28,13 +28,24 @@
     </message>
 </context>
 <context>
-    <name>Settings</name>
+    <name>SearchPage</name>
     <message>
-        <source>Nested Page</source>
+        <source>Found devices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Item</source>
+        <source>Search in progress...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Settings</name>
+    <message>
+        <source>Nested Page</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -6,5 +6,4 @@ ApplicationWindow
 {
     initialPage: Component { SearchPage { } }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
-    allowedOrientations: Orientation.Landscape | Orientation.LandscapeInverted
 }

@@ -1,29 +1,73 @@
-#ifndef AVAILABLEDEVICESMODEL_H
-#define AVAILABLEDEVICESMODEL_H
+#pragma once
 
-#include <QAbstractItemModel>
+#include "abstract_rc_car.h"
 
-class AvailableDevicesModel : public QAbstractItemModel
+#include <QAbstractListModel>
+#include <QBluetoothDeviceDiscoveryAgent>
+#include <QLowEnergyController>
+#include <QQmlEngine>
+
+class AvailableDevicesModel : public QAbstractListModel
 {
     Q_OBJECT
-
+    Q_PROPERTY(bool scanInProgress READ scanInProgress NOTIFY scanStateChanged)
 public:
+    enum Role {
+        Name = Qt::UserRole + 1,
+        TypeName,
+        ImagePath,
+        Index
+    };
+
+    enum DeviceType {
+        Shell,
+    };
+
+    class DetectedDevice {
+    public:
+        DetectedDevice() = default;
+        QString imagePath, typeName;
+        QBluetoothDeviceInfo info;
+        DeviceType type;
+        QString name() const
+        {
+            return info.name();
+        }
+    };
+
     explicit AvailableDevicesModel(QObject *parent = nullptr);
-
-    // Header:
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
-
-    // Basic functionality:
-    QModelIndex index(int row, int column,
-                      const QModelIndex &parent = QModelIndex()) const override;
-    QModelIndex parent(const QModelIndex &index) const override;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+    Q_INVOKABLE void detectDevices();
+
+    bool scanInProgress() const;
+    QHash<int, QByteArray> roleNames() const override;
+
+    Q_INVOKABLE void useDevice(int deviceIndex);
+
+    Q_INVOKABLE AbstractRC_Car *currentDevice() const;
+
+    static QObject *qmlInstance(QQmlEngine *engine, QJSEngine *scriptEngine);
+
+private slots:
+    // QBluetoothDeviceDiscoveryAgent related
+    void deviceDiscovered(const QBluetoothDeviceInfo&);
+    void deviceScanFinished();
+    void deviceScanError(QBluetoothDeviceDiscoveryAgent::Error error);
+
+Q_SIGNALS:
+    void scanStateChanged();
+
 private:
+    void setScanInProgress(bool scanInProgress);
+
+    QBluetoothDeviceDiscoveryAgent *m_discoveryAgent = nullptr;
+    QList<DetectedDevice> m_devices;
+    bool m_scanInProgress = false;
+    AbstractRC_Car *m_currentDevice = nullptr;
 };
 
-#endif // AVAILABLEDEVICESMODEL_H

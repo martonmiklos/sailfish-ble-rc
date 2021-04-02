@@ -2,28 +2,40 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Page {
-    id: page
+    id: searchPage
 
     // The effective value will be restricted by ApplicationWindow.allowedOrientations
     allowedOrientations: Orientation.All
 
-    SilicaListView {
-        id: listView
-        model: 20
-        anchors.fill: parent
-        header: PageHeader {
-            title: qsTr("Found devices")
+    Component {
+        id: detectedDeviceDelegate
+        DiscoveredRCItem {
+            width: parent.width
+            name: Name
+            typeName: TypeName
+            image: ImagePath
+            index: Index
         }
-        delegate: DiscoveredRCItem {
-            id: delegate
+    }
 
-            Label {
-                x: Theme.horizontalPageMargin
-                text: qsTr("Item") + " " + index
-                anchors.verticalCenter: parent.verticalCenter
-                color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
+    SilicaListView {
+        PullDownMenu {
+            MenuItem {
+                text: AvailableDevicesModel.scanInProgress ? qsTr("Search in progress...") : qsTr("Search")
+                enabled: !AvailableDevicesModel.scanInProgress
+                onClicked: AvailableDevicesModel.detectDevices()
             }
         }
+
+        id: listViewDetectedDevices
+        model: AvailableDevicesModel
+        delegate: detectedDeviceDelegate
+        anchors.fill: parent
+        leftMargin: Theme.paddingMedium
+        header: PageHeader {
+            title: AvailableDevicesModel.scanInProgress ? qsTr("Search in progress...") : qsTr("Found devices")
+        }
+
         VerticalScrollDecorator {}
     }
 }

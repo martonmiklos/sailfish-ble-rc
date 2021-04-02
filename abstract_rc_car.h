@@ -26,13 +26,13 @@ public:
      * @brief setThrottle
      * @param throttle -1 to 1 range
      */
-    virtual void setThrottle(float throttle) = 0;
+    Q_INVOKABLE virtual void setThrottle(float throttle) = 0;
 
     /**
      * @brief setSteer
      * @param steer
      */
-    virtual void setSteer(float steer) = 0;
+    Q_INVOKABLE virtual void setSteer(float steer) = 0;
 
     /**
      * @brief batteryVoltage
@@ -44,8 +44,7 @@ public:
     virtual bool isFeatureSupported(Feature feature) const = 0;
     virtual bool setFeature(Feature feature, const QVariant &value) = 0;
 
-    virtual QString imagePath() const = 0;
-
+    virtual QString name() const = 0;
 signals:
     void batteryVoltageUpdated();
     void connectionStateChanged(ConnectionState oldState, ConnectionState newState);

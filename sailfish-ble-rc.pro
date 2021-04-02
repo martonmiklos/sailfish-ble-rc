@@ -28,7 +28,7 @@ DISTFILES += qml/sailfish-ble-rc.qml \
     qml/QMLVirtualJoystick/background.png \
     qml/QMLVirtualJoystick/finger.png \
     qml/cover/CoverPage.qml \
-    qml/pages/MainPage.qml \
+    qml/pages/DrivePage.qml \
     qml/pages/Settings.qml \
     qml/pages/SearchPage.qml \
     rpm/sailfish-ble-rc.changes.in \
@@ -43,6 +43,8 @@ SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
 # to disable building translations every time, comment out the
 # following CONFIG line
 CONFIG += sailfishapp_i18n
+
+CONFIG += qml_debug
 
 # German translation is enabled as an example. If you aren't
 # planning to localize your app, remember to comment out the
