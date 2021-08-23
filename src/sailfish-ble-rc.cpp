@@ -18,8 +18,7 @@ int main(int argc, char *argv[])
     //   - SailfishApp::pathToMainQml() to get a QUrl to the main QML file
     //
     // To display the view, call "show()" (will show fullscreen on device).
-    //qmlRegisterType<AvailableDevicesModel>(uri, 1, 0, "AvailableDevicesModel");
     qmlRegisterSingletonType<AvailableDevicesModel>    (uri, 1, 0, "AvailableDevicesModel",  AvailableDevicesModel::qmlInstance);
-
+    qmlRegisterUncreatableType<AbstractRC_Car>(uri, 1, 0, "AbstractRC_Car","AbstractRC_Car is an abstract type");
     return SailfishApp::main(argc, argv);
 }

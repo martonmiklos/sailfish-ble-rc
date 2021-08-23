@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "../QMLVirtualJoystick"
+import hu.mm.sailfish_ble_rc 1.0
 
 Page {
     id: page

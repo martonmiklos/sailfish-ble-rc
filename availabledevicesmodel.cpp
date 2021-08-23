@@ -62,6 +62,7 @@ void AvailableDevicesModel::deviceDiscovered(const QBluetoothDeviceInfo & info)
         d.typeName = tr("Shell Bluetooth RC car");
         d.imagePath = Shell_RC_Car::imagePath();
         d.type = Shell;
+        qWarning() << m_devices.count() << m_devices.count() + 1;
         beginInsertRows(QModelIndex(), m_devices.count(), m_devices.count() + 1);
         m_devices.append(d);
         endInsertRows();

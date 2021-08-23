@@ -92,7 +92,7 @@ bool Shell_RC_Car::connectToDevice(const QBluetoothDeviceInfo &info)
 
 void Shell_RC_Car::addLowEnergyService(const QBluetoothUuid &uuid)
 {
-    if (uuid == QBluetoothUuid(CONTROL_SERVICE_UUID))
+    if (uuid == QBluetoothUuid(CONTROL_SERVICE_UUID) && m_controlService == nullptr)
         m_controlService = m_controller->createServiceObject(uuid);
 }
 
@@ -100,10 +100,10 @@ void Shell_RC_Car::serviceScanDone()
 {
     if (m_controlService) {
         if (m_controlService->state() == QLowEnergyService::DiscoveryRequired) {
-        connect(m_controlService, SIGNAL(stateChanged(QLowEnergyService::ServiceState)),
-                this, SLOT(controlServiceDetailsDiscovered(QLowEnergyService::ServiceState)));
-        m_controlService->discoverDetails();
-        return;
+            connect(m_controlService, SIGNAL(stateChanged(QLowEnergyService::ServiceState)),
+                    this, SLOT(controlServiceDetailsDiscovered(QLowEnergyService::ServiceState)));
+            m_controlService->discoverDetails();
+            return;
         }
         processControlServiceCharacteristics();
     } else {
@@ -121,7 +121,11 @@ void Shell_RC_Car::controlServiceDetailsDiscovered(QLowEnergyService::ServiceSta
 
 void Shell_RC_Car::processControlServiceCharacteristics()
 {
-    m_controlCharacteristics = m_controlService->characteristic(QBluetoothUuid());
+    m_controlCharacteristics = m_controlService->characteristic(QBluetoothUuid(CONTROL_CHARACTERISTICS_UUID));
+    if (m_controlCharacteristics.isValid()) {
+        setConnectionState(Connected);
+        m_sendTimer.start();
+    }
 }
 
 bool Shell_RC_Car::isDevice(const QBluetoothDeviceInfo &info)
