@@ -6,6 +6,8 @@ import hu.mm.sailfish_ble_rc 1.0
 Page {
     id: page
 
+    forwardNavigation: false
+    backNavigation: false
     property bool leftHanded: false
 
     allowedOrientations: Orientation.Landscape | Orientation.LandscapeInverted
@@ -15,7 +17,7 @@ Page {
         verticalOnly: true
         height: page.height / 3
         anchors.left: parent.left
-        anchors.leftMargin: Theme.paddingLarge
+        anchors.leftMargin: Theme.paddingLarge + (parent.width / 10.0)
         anchors.verticalCenter: parent.verticalCenter
         onJoystick_moved: {
             AvailableDevicesModel.currentDevice().setThrottle(y)
@@ -27,7 +29,7 @@ Page {
         horizontalOnly: true
         height: page.height / 3
         anchors.right: parent.right
-        anchors.rightMargin: Theme.paddingLarge
+        anchors.rightMargin: Theme.paddingLarge + (parent.width / 10.0)
         anchors.verticalCenter: parent.verticalCenter
         onJoystick_moved: {
             AvailableDevicesModel.currentDevice().setSteer(x)
