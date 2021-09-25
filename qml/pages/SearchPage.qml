@@ -22,7 +22,7 @@ Page {
     SilicaListView {
         PullDownMenu {
             MenuItem {
-                text: AvailableDevicesModel.scanInProgress ? qsTr("Search in progress...") : qsTr("Search")
+                text: qsTr("Discover devices")
                 enabled: !AvailableDevicesModel.scanInProgress
                 onClicked: AvailableDevicesModel.detectDevices()
             }
@@ -34,7 +34,7 @@ Page {
         anchors.fill: parent
         leftMargin: Theme.paddingMedium
         header: PageHeader {
-            title: AvailableDevicesModel.scanInProgress ? qsTr("Search in progress...") : qsTr("Found devices")
+            title: AvailableDevicesModel.statusString
         }
 
         VerticalScrollDecorator {}

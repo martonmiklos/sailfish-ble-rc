@@ -11,6 +11,7 @@ class AvailableDevicesModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(bool scanInProgress READ scanInProgress NOTIFY scanStateChanged)
+    Q_PROPERTY(QString statusString READ statusString NOTIFY statusStringChanged)
 public:
     enum Role {
         Name = Qt::UserRole + 1,
@@ -51,6 +52,9 @@ public:
 
     Q_INVOKABLE AbstractRC_Car *currentDevice() const;
 
+    Q_INVOKABLE QString statusString() const;
+    void setStatusString(const QString & statusString);
+
     static QObject *qmlInstance(QQmlEngine *engine, QJSEngine *scriptEngine);
 
 private slots:
@@ -61,6 +65,7 @@ private slots:
 
 Q_SIGNALS:
     void scanStateChanged();
+    void statusStringChanged();
 
 private:
     void setScanInProgress(bool scanInProgress);
@@ -69,5 +74,6 @@ private:
     QList<DetectedDevice> m_devices;
     bool m_scanInProgress = false;
     AbstractRC_Car *m_currentDevice = nullptr;
+    QString m_statusString;
 };
 

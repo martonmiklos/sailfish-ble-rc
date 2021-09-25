@@ -30,15 +30,7 @@
 <context>
     <name>SearchPage</name>
     <message>
-        <source>Found devices</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Search in progress...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Search</source>
+        <source>Discover devices</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

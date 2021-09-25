@@ -5,6 +5,7 @@
 AvailableDevicesModel::AvailableDevicesModel(QObject *parent)
     : QAbstractListModel(parent)
 {
+    m_statusString = tr("Start discovery from the pulley menu");
     //! [les-devicediscovery-1]
     m_discoveryAgent = new QBluetoothDeviceDiscoveryAgent();
     //discoveryAgent->setLowEnergyDiscoveryTimeout(5000);
@@ -18,6 +19,7 @@ AvailableDevicesModel::AvailableDevicesModel(QObject *parent)
 int AvailableDevicesModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
+    qWarning() << m_devices.count();
     return m_devices.count();
 }
 
@@ -72,10 +74,35 @@ void AvailableDevicesModel::deviceDiscovered(const QBluetoothDeviceInfo & info)
 void AvailableDevicesModel::deviceScanFinished()
 {
     setScanInProgress(false);
+    if (m_devices.count())
+        setStatusString(tr("No devices found"));
+    else
+        setStatusString(tr("Found devices"));
 }
 
 void AvailableDevicesModel::deviceScanError(QBluetoothDeviceDiscoveryAgent::Error error)
 {
+    if (m_scanInProgress) {
+        switch (error) {
+        case QBluetoothDeviceDiscoveryAgent::NoError:
+            break;
+        case QBluetoothDeviceDiscoveryAgent::InputOutputError:
+            setStatusString(tr("IO error during discovery"));
+            break;
+        case QBluetoothDeviceDiscoveryAgent::PoweredOffError:
+            setStatusString(tr("Please turn on Bluetooth"));
+            break;
+        case QBluetoothDeviceDiscoveryAgent::InvalidBluetoothAdapterError:
+            setStatusString(tr("Invalid BT adapter"));
+            break;
+        case QBluetoothDeviceDiscoveryAgent::UnsupportedPlatformError:
+            setStatusString(tr("Platform not supported"));
+            break;
+        case QBluetoothDeviceDiscoveryAgent::UnknownError:
+            setStatusString(tr("Unknown error during discovery"));
+            break;
+        }
+    }
     setScanInProgress(false);
 }
 
@@ -90,6 +117,19 @@ void AvailableDevicesModel::setScanInProgress(bool scanInProgress)
 AbstractRC_Car *AvailableDevicesModel::currentDevice() const
 {
     return m_currentDevice;
+}
+
+QString AvailableDevicesModel::statusString() const
+{
+    return m_statusString;
+}
+
+void AvailableDevicesModel::setStatusString(const QString &statusString)
+{
+    if (m_statusString != statusString) {
+        m_statusString = statusString;
+        emit statusStringChanged();
+    }
 }
 
 QObject *AvailableDevicesModel::qmlInstance(QQmlEngine *engine, QJSEngine *scriptEngine)
