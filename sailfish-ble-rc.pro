@@ -28,6 +28,7 @@ DISTFILES += qml/sailfish-ble-rc.qml \
     qml/QMLVirtualJoystick/background.png \
     qml/QMLVirtualJoystick/finger.png \
     qml/cover/CoverPage.qml \
+    qml/pages/ConnectingPage.qml \
     qml/pages/DrivePage.qml \
     qml/pages/Settings.qml \
     qml/pages/SearchPage.qml \

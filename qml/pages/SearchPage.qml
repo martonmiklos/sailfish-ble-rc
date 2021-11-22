@@ -17,10 +17,17 @@ Page {
             image: ImagePath
             index: Index
         }
+
+
     }
 
     SilicaListView {
         PullDownMenu {
+            MenuItem {
+                text: qsTr("Settings")
+                onClicked: AvailableDevicesModel.detectDevices()
+            }
+
             MenuItem {
                 text: qsTr("Discover devices")
                 enabled: !AvailableDevicesModel.scanInProgress

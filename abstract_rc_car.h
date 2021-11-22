@@ -45,6 +45,10 @@ public:
     virtual bool setFeature(Feature feature, const QVariant &value) = 0;
 
     virtual QString name() const = 0;
+    virtual QString connectionStateString() const = 0;
+
+    virtual bool connectToDevice() = 0;
+    virtual void disconnectFromDevice() = 0;
 signals:
     void batteryVoltageUpdated();
     void connectionStateChanged(ConnectionState oldState, ConnectionState newState);

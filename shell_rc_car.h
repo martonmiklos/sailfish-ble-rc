@@ -16,11 +16,12 @@ public:
     bool isFeatureSupported(Feature feature) const override;
     bool setFeature(Feature feature, const QVariant &value) override;
 
-    bool connectToDevice(const QBluetoothDeviceInfo &info) override;
+    bool connectToDevice() override;
 
     static bool isDevice(const QBluetoothDeviceInfo &info);
     static QString imagePath();
     QString name() const override;
+    QString connectionStateString() const override;
 
 protected slots:
     void send() override;

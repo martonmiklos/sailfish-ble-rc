@@ -35,4 +35,20 @@ Page {
             AvailableDevicesModel.currentDevice().setSteer(x)
         }
     }
+
+    Button {
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.centerIn: parent
+        Image {
+            anchors.fill: parent
+            source: ":/res/go-previous.svg"
+            fillMode: Image.Tile
+        }
+
+        onClicked: {
+            AvailableDevicesModel.disconnectFromCurrentDevice()
+            pageStack.push(Qt.resolvedUrl("SearchPage.qml"));
+        }
+    }
 }

@@ -79,14 +79,14 @@ bool Shell_RC_Car::setFeature(AbstractRC_Car::Feature feature, const QVariant &v
     return true;
 }
 
-bool Shell_RC_Car::connectToDevice(const QBluetoothDeviceInfo &info)
+bool Shell_RC_Car::connectToDevice()
 {
     if (m_controlService) {
         disconnect(m_controlService, nullptr, this, nullptr);
         delete m_controlService;
         m_controlService = nullptr;
     }
-    return BLE_RC_Car::connectToDevice(info);
+    return BLE_RC_Car::connectToDevice();
 }
 
 
@@ -98,6 +98,7 @@ void Shell_RC_Car::addLowEnergyService(const QBluetoothUuid &uuid)
 
 void Shell_RC_Car::serviceScanDone()
 {
+    qWarning() << "Service scan done";
     if (m_controlService) {
         if (m_controlService->state() == QLowEnergyService::DiscoveryRequired) {
             connect(m_controlService, SIGNAL(stateChanged(QLowEnergyService::ServiceState)),
@@ -113,6 +114,7 @@ void Shell_RC_Car::serviceScanDone()
 
 void Shell_RC_Car::controlServiceDetailsDiscovered(QLowEnergyService::ServiceState newState)
 {
+    qWarning() << "Control service discovered" << newState;
     if (newState != QLowEnergyService::ServiceDiscovered)
         return;
 
@@ -123,6 +125,7 @@ void Shell_RC_Car::processControlServiceCharacteristics()
 {
     m_controlCharacteristics = m_controlService->characteristic(QBluetoothUuid(CONTROL_CHARACTERISTICS_UUID));
     if (m_controlCharacteristics.isValid()) {
+        qWarning() << "Connected!";
         setConnectionState(Connected);
         m_sendTimer.start();
     }
@@ -141,6 +144,19 @@ QString Shell_RC_Car::imagePath()
 QString Shell_RC_Car::name() const
 {
     return  tr("Shell BLE RC car");
+}
+
+QString Shell_RC_Car::connectionStateString() const
+{
+    switch (m_connectionState) {
+    case AbstractRC_Car::Disconnected:
+        return tr("Not connected");
+    case AbstractRC_Car::Connecting:
+        return tr("Connecting...");
+    case AbstractRC_Car::Connected:
+        return tr("Connected");
+    }
+    return QString();
 }
 
 void Shell_RC_Car::send()

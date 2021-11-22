@@ -11,9 +11,12 @@ class BLE_RC_Car : public AbstractRC_Car
 public:
     BLE_RC_Car(QObject *parent = nullptr);
 
-    virtual bool connectToDevice(const QBluetoothDeviceInfo &info);
+    virtual bool connectToDevice() override;
+    virtual void disconnectFromDevice() override;
 
     QString errorString() const;
+
+    void setDevInfo(const QBluetoothDeviceInfo &newDevInfo);
 
 protected slots:
     virtual void send() = 0;
@@ -27,7 +30,9 @@ protected slots:
     void errorReceived(QLowEnergyController::Error error);
 
 protected:
+    QBluetoothDeviceInfo m_devInfo;
     QLowEnergyController *m_controller = nullptr;
     QString m_errorString;
+    bool m_reconnecting = false;
 };
 

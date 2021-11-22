@@ -48,24 +48,28 @@ public:
     bool scanInProgress() const;
     QHash<int, QByteArray> roleNames() const override;
 
-    Q_INVOKABLE void useDevice(int deviceIndex);
+    Q_INVOKABLE void connectToDevice(int deviceIndex);
 
     Q_INVOKABLE AbstractRC_Car *currentDevice() const;
 
     Q_INVOKABLE QString statusString() const;
     void setStatusString(const QString & statusString);
 
-    static QObject *qmlInstance(QQmlEngine *engine, QJSEngine *scriptEngine);
+    static QObject *qmlInstance(QQmlEngine *engine = nullptr, QJSEngine *scriptEngine = nullptr);
+
+    Q_INVOKABLE void disconnectFromCurrentDevice();
 
 private slots:
     // QBluetoothDeviceDiscoveryAgent related
     void deviceDiscovered(const QBluetoothDeviceInfo&);
     void deviceScanFinished();
     void deviceScanError(QBluetoothDeviceDiscoveryAgent::Error error);
+    void currentDeviceConnectionStateChangedSlot(AbstractRC_Car::ConnectionState oldState, AbstractRC_Car::ConnectionState newState);
 
 Q_SIGNALS:
     void scanStateChanged();
     void statusStringChanged();
+    void currentDeviceConnectionStateChanged(int oldState, int newState);
 
 private:
     void setScanInProgress(bool scanInProgress);

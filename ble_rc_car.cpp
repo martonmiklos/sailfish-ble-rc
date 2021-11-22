@@ -6,29 +6,34 @@ BLE_RC_Car::BLE_RC_Car(QObject *parent) :
 
 }
 
-bool BLE_RC_Car::connectToDevice(const QBluetoothDeviceInfo &info)
+bool BLE_RC_Car::connectToDevice()
 {
-    if (m_controller) {
-        disconnect(m_controller, nullptr, this, nullptr);
+    if (m_controller && m_controller->state() == QLowEnergyController::ConnectedState) {
         m_controller->disconnectFromDevice();
-        m_controller->deleteLater();
+        m_reconnecting = true;
+    } else {
+        if (!m_controller) {
+            m_controller = new QLowEnergyController(m_devInfo);
+            connect(m_controller, &QLowEnergyController::connected, this, &BLE_RC_Car::deviceConnected);
+            connect(m_controller, &QLowEnergyController::disconnected, this, &BLE_RC_Car::deviceDisconnected);
+
+            connect(m_controller, SIGNAL(error(QLowEnergyController::Error)),
+                    this, SLOT(errorReceived(QLowEnergyController::Error)));
+            connect(m_controller, SIGNAL(serviceDiscovered(QBluetoothUuid)),
+                    this, SLOT(addLowEnergyService(QBluetoothUuid)));
+            connect(m_controller, SIGNAL(discoveryFinished()),
+                    this, SLOT(serviceScanDone()));
+            m_controller->setRemoteAddressType(QLowEnergyController::PublicAddress);
+        }
+        m_controller->connectToDevice();
+        setConnectionState(Connecting);
     }
-    m_controller = new QLowEnergyController(info);
-    connect(m_controller, &QLowEnergyController::connected, this, &BLE_RC_Car::deviceConnected);
-    connect(m_controller, &QLowEnergyController::disconnected, this, &BLE_RC_Car::deviceDisconnected);
-
-
-    connect(m_controller, SIGNAL(error(QLowEnergyController::Error)),
-            this, SLOT(errorReceived(QLowEnergyController::Error)));
-
-    connect(m_controller, SIGNAL(serviceDiscovered(QBluetoothUuid)),
-            this, SLOT(addLowEnergyService(QBluetoothUuid)));
-    connect(m_controller, SIGNAL(discoveryFinished()),
-            this, SLOT(serviceScanDone()));
-    m_controller->setRemoteAddressType(QLowEnergyController::PublicAddress);
-    m_controller->connectToDevice();
-    setConnectionState(Connecting);
     return true;
+}
+
+void BLE_RC_Car::disconnectFromDevice()
+{
+    m_controller->disconnectFromDevice();
 }
 
 void BLE_RC_Car::deviceConnected()
@@ -38,7 +43,13 @@ void BLE_RC_Car::deviceConnected()
 
 void BLE_RC_Car::deviceDisconnected()
 {
-    setConnectionState(Disconnected);
+
+    if (m_reconnecting) {
+        m_controller->connectToDevice();
+        setConnectionState(Connecting);
+    } else {
+        setConnectionState(Disconnected);
+    }
 }
 
 void BLE_RC_Car::serviceScanDone()
@@ -48,7 +59,12 @@ void BLE_RC_Car::serviceScanDone()
 
 void BLE_RC_Car::errorReceived(QLowEnergyController::Error error)
 {
+    qWarning() << error;
+}
 
+void BLE_RC_Car::setDevInfo(const QBluetoothDeviceInfo &newDevInfo)
+{
+    m_devInfo = newDevInfo;
 }
 
 QString BLE_RC_Car::errorString() const

@@ -10,8 +10,8 @@ ListItem {
     property int index: -1
 
     onClicked: {
-        AvailableDevicesModel.useDevice(index)
-        pageStack.push(Qt.resolvedUrl("DrivePage.qml"))
+        AvailableDevicesModel.connectToDevice(index)
+        pageStack.push(Qt.resolvedUrl("ConnectingPage.qml"))
     }
 
     Row {
@@ -21,12 +21,15 @@ ListItem {
                 id: nameText
                 text: detectedDevice.name
                 font.pixelSize: Theme.fontSizeLarge
+                font.family: Theme.fontFamily
+                color: Theme.primaryColor
             }
 
             Text {
                 id: typeNameText
                 text: detectedDevice.typeName
                 font.pixelSize: Theme.fontSizeSmall
+                color: Theme.primaryColor
             }
             width: (detectedDevice.width - row.height - Theme.paddingLarge)
         }
@@ -37,6 +40,10 @@ ListItem {
             width: row.height
             fillMode: Image.PreserveAspectFit
         }
-
+    }
+    menu: ContextMenu {
+        MenuItem {
+            text: qsTr("Autoconnect")
+        }
     }
 }

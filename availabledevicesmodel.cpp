@@ -19,7 +19,6 @@ AvailableDevicesModel::AvailableDevicesModel(QObject *parent)
 int AvailableDevicesModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    qWarning() << m_devices.count();
     return m_devices.count();
 }
 
@@ -49,9 +48,14 @@ QVariant AvailableDevicesModel::data(const QModelIndex &index, int role) const
 
 void AvailableDevicesModel::detectDevices()
 {
-    beginResetModel();
-    endResetModel();
+    if (m_currentDevice) {
+        m_currentDevice->disconnectFromDevice();
+        m_currentDevice = nullptr;
+    }
+    beginRemoveRows(QModelIndex(), 0, m_devices.count());
+    endRemoveRows();
     m_devices.clear();
+    setStatusString(tr("Discovering devices..."));
     setScanInProgress(true);
     m_discoveryAgent->start();
 }
@@ -64,8 +68,7 @@ void AvailableDevicesModel::deviceDiscovered(const QBluetoothDeviceInfo & info)
         d.typeName = tr("Shell Bluetooth RC car");
         d.imagePath = Shell_RC_Car::imagePath();
         d.type = Shell;
-        qWarning() << m_devices.count() << m_devices.count() + 1;
-        beginInsertRows(QModelIndex(), m_devices.count(), m_devices.count() + 1);
+        beginInsertRows(QModelIndex(), m_devices.count(), m_devices.count());
         m_devices.append(d);
         endInsertRows();
     }
@@ -74,10 +77,10 @@ void AvailableDevicesModel::deviceDiscovered(const QBluetoothDeviceInfo & info)
 void AvailableDevicesModel::deviceScanFinished()
 {
     setScanInProgress(false);
-    if (m_devices.count())
+    if (m_devices.count() == 0)
         setStatusString(tr("No devices found"));
     else
-        setStatusString(tr("Found devices"));
+        setStatusString(tr("Discovered devices"));
 }
 
 void AvailableDevicesModel::deviceScanError(QBluetoothDeviceDiscoveryAgent::Error error)
@@ -104,6 +107,19 @@ void AvailableDevicesModel::deviceScanError(QBluetoothDeviceDiscoveryAgent::Erro
         }
     }
     setScanInProgress(false);
+}
+
+void AvailableDevicesModel::currentDeviceConnectionStateChangedSlot(AbstractRC_Car::ConnectionState oldState, AbstractRC_Car::ConnectionState newState)
+{
+    Q_UNUSED(oldState)
+    if (m_currentDevice) {
+        if (newState == AbstractRC_Car::Disconnected) {
+            m_currentDevice->deleteLater();
+            m_currentDevice = nullptr;
+        }
+        qWarning() << oldState << newState;
+        emit currentDeviceConnectionStateChanged(oldState, newState);
+    }
 }
 
 void AvailableDevicesModel::setScanInProgress(bool scanInProgress)
@@ -141,6 +157,12 @@ QObject *AvailableDevicesModel::qmlInstance(QQmlEngine *engine, QJSEngine *scrip
     return &instance;
 }
 
+void AvailableDevicesModel::disconnectFromCurrentDevice()
+{
+    if (m_currentDevice)
+        m_currentDevice->disconnectFromDevice();
+}
+
 bool AvailableDevicesModel::scanInProgress() const
 {
     return m_scanInProgress;
@@ -156,7 +178,7 @@ QHash<int, QByteArray> AvailableDevicesModel::roleNames() const
     return roles;
 }
 
-void AvailableDevicesModel::useDevice(int deviceIndex)
+void AvailableDevicesModel::connectToDevice(int deviceIndex)
 {
     if (deviceIndex < m_devices.count()) {
         if (m_currentDevice) {
@@ -165,8 +187,11 @@ void AvailableDevicesModel::useDevice(int deviceIndex)
         switch (m_devices.at(deviceIndex).type) {
         case Shell:
             auto shell = new Shell_RC_Car(this);
-            shell->connectToDevice(m_devices.at(deviceIndex).info);
+            shell->setDevInfo(m_devices.at(deviceIndex).info);
+            shell->connectToDevice();
             m_currentDevice = shell;
+            connect(m_currentDevice, &AbstractRC_Car::connectionStateChanged,
+                    this, &AvailableDevicesModel::currentDeviceConnectionStateChangedSlot);
             break;
         }
     }

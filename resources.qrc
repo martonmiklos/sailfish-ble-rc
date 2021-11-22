@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>res/deviceIcons/shell.png</file>
+        <file>res/go-previous.svg</file>
     </qresource>
 </RCC>
