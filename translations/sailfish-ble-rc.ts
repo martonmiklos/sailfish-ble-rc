@@ -20,6 +20,13 @@
     </message>
 </context>
 <context>
+    <name>DiscoveredRCItem</name>
+    <message>
+        <source>Autoconnect</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>QML Virtual Joystick Example</source>

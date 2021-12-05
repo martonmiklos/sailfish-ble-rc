@@ -5,7 +5,7 @@ AbstractRC_Car::AbstractRC_Car(QObject *parent) : QObject(parent)
 
 }
 
-qreal AbstractRC_Car::batteryVoltage()
+qreal AbstractRC_Car::batteryPercentage()
 {
     return 0.0;
 }

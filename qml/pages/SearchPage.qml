@@ -8,6 +8,10 @@ Page {
     // The effective value will be restricted by ApplicationWindow.allowedOrientations
     allowedOrientations: Orientation.All
 
+    Component.onCompleted: {
+        AvailableDevicesModel.disconnectFromCurrentDevice()
+    }
+
     Component {
         id: detectedDeviceDelegate
         DiscoveredRCItem {
@@ -17,8 +21,6 @@ Page {
             image: ImagePath
             index: Index
         }
-
-
     }
 
     SilicaListView {

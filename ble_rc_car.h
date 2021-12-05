@@ -17,6 +17,7 @@ public:
     QString errorString() const;
 
     void setDevInfo(const QBluetoothDeviceInfo &newDevInfo);
+    QString connectionStateString() const override;
 
 protected slots:
     virtual void send() = 0;
@@ -32,7 +33,9 @@ protected slots:
 protected:
     QBluetoothDeviceInfo m_devInfo;
     QLowEnergyController *m_controller = nullptr;
-    QString m_errorString;
+    QString m_errorString, m_connectionStateString;
+    void setConnectionStateString(const QString &newConnectionStateString);
+
     bool m_reconnecting = false;
 };
 

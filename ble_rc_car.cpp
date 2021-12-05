@@ -27,6 +27,7 @@ bool BLE_RC_Car::connectToDevice()
         }
         m_controller->connectToDevice();
         setConnectionState(Connecting);
+        setConnectionStateString(tr("Connecting to device"));
     }
     return true;
 }
@@ -34,11 +35,6 @@ bool BLE_RC_Car::connectToDevice()
 void BLE_RC_Car::disconnectFromDevice()
 {
     m_controller->disconnectFromDevice();
-}
-
-void BLE_RC_Car::deviceConnected()
-{
-    m_controller->discoverServices();
 }
 
 void BLE_RC_Car::deviceDisconnected()
@@ -52,19 +48,44 @@ void BLE_RC_Car::deviceDisconnected()
     }
 }
 
+void BLE_RC_Car::deviceConnected()
+{
+    m_controller->discoverServices();
+    setConnectionStateString(tr("Discovering services"));
+}
+
+
+
 void BLE_RC_Car::serviceScanDone()
 {
     setConnectionState(Connected);
+    setConnectionStateString(tr("Discovering services done, connected"));
 }
 
 void BLE_RC_Car::errorReceived(QLowEnergyController::Error error)
 {
     qWarning() << error;
+    if (m_connectionState != Connected) {
+        setConnectionStateString(tr("Discovery error: %1").arg(error));
+    }
+}
+
+void BLE_RC_Car::setConnectionStateString(const QString &newConnectionStateString)
+{
+    if (m_connectionStateString != newConnectionStateString) {
+        m_connectionStateString = newConnectionStateString;
+        emit connectionStateStringChanged();
+    }
 }
 
 void BLE_RC_Car::setDevInfo(const QBluetoothDeviceInfo &newDevInfo)
 {
     m_devInfo = newDevInfo;
+}
+
+QString BLE_RC_Car::connectionStateString() const
+{
+    return m_connectionStateString;
 }
 
 QString BLE_RC_Car::errorString() const

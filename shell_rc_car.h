@@ -5,6 +5,8 @@
 #include <QTimer>
 #include <QLowEnergyController>
 
+class QAESEncryption;
+
 class Shell_RC_Car : public BLE_RC_Car
 {
     Q_OBJECT
@@ -15,20 +17,22 @@ public:
     void setSteer(float steer) override;
     bool isFeatureSupported(Feature feature) const override;
     bool setFeature(Feature feature, const QVariant &value) override;
+    QVariant featureValue(Feature feature) const override;
 
     bool connectToDevice() override;
 
     static bool isDevice(const QBluetoothDeviceInfo &info);
     static QString imagePath();
     QString name() const override;
-    QString connectionStateString() const override;
+    qreal batteryPercentage() override;
 
 protected slots:
     void send() override;
     void serviceScanDone() override;
     void addLowEnergyService(const QBluetoothUuid &uuid) override;
     void controlServiceDetailsDiscovered(QLowEnergyService::ServiceState newState);
-
+    void characteristicChanged(const QLowEnergyCharacteristic &info,
+                               const QByteArray &value);
 private:
     QTimer m_sendTimer;
     qreal m_deadband = 0.1;
@@ -38,12 +42,19 @@ private:
     bool m_backward = false;
     bool m_turbo = false;
     bool m_lamp = false;
+    QString m_connectionStateString;
+    quint8 m_batteryPercentage = 0.0;
+    QAESEncryption *m_aesDecryptor;
 
     QLowEnergyService *m_controlService = nullptr;
     QLowEnergyCharacteristic m_controlCharacteristics;
+    QLowEnergyCharacteristic m_batteryCharacteristics;
 
     static QString CONTROL_SERVICE_UUID;
     static QString CONTROL_CHARACTERISTICS_UUID;
+    static QString BATTERY_CHARACTERISTICS_UUID;
+
+    static QByteArray AES_KEY;
 
     static QByteArray IDLE_COMMAND;
     static QByteArray FORWARD_COMMAND;

@@ -65,11 +65,13 @@ private slots:
     void deviceScanFinished();
     void deviceScanError(QBluetoothDeviceDiscoveryAgent::Error error);
     void currentDeviceConnectionStateChangedSlot(AbstractRC_Car::ConnectionState oldState, AbstractRC_Car::ConnectionState newState);
+    void currentDeviceConnectionStateStringChangedSlot();
 
 Q_SIGNALS:
     void scanStateChanged();
     void statusStringChanged();
     void currentDeviceConnectionStateChanged(int oldState, int newState);
+    void currentDeviceConnectionStateStringChanged(const QString &stateString);
 
 private:
     void setScanInProgress(bool scanInProgress);

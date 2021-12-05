@@ -122,6 +122,11 @@ void AvailableDevicesModel::currentDeviceConnectionStateChangedSlot(AbstractRC_C
     }
 }
 
+void AvailableDevicesModel::currentDeviceConnectionStateStringChangedSlot()
+{
+    emit currentDeviceConnectionStateStringChanged(m_currentDevice->connectionStateString());
+}
+
 void AvailableDevicesModel::setScanInProgress(bool scanInProgress)
 {
     if (m_scanInProgress != scanInProgress) {
@@ -183,6 +188,7 @@ void AvailableDevicesModel::connectToDevice(int deviceIndex)
     if (deviceIndex < m_devices.count()) {
         if (m_currentDevice) {
             delete m_currentDevice;
+            m_currentDevice = nullptr;
         }
         switch (m_devices.at(deviceIndex).type) {
         case Shell:
@@ -192,6 +198,8 @@ void AvailableDevicesModel::connectToDevice(int deviceIndex)
             m_currentDevice = shell;
             connect(m_currentDevice, &AbstractRC_Car::connectionStateChanged,
                     this, &AvailableDevicesModel::currentDeviceConnectionStateChangedSlot);
+            connect(m_currentDevice, &AbstractRC_Car::connectionStateStringChanged,
+                    this, &AvailableDevicesModel::currentDeviceConnectionStateStringChangedSlot);
             break;
         }
     }

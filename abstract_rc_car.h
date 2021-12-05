@@ -1,7 +1,7 @@
-#ifndef ABSTRACTRC_CAR_H
-#define ABSTRACTRC_CAR_H
+#pragma once
 
 #include <QObject>
+#include <QVariant>
 
 class AbstractRC_Car : public QObject
 {
@@ -39,23 +39,24 @@ public:
      * @return If battery voltage query supported it returns
      * the battery voltage in Volts unit. If not supported it returns 0.
      */
-    virtual qreal batteryVoltage();
+    Q_INVOKABLE virtual qreal batteryPercentage();
 
-    virtual bool isFeatureSupported(Feature feature) const = 0;
-    virtual bool setFeature(Feature feature, const QVariant &value) = 0;
+    Q_INVOKABLE virtual bool isFeatureSupported(Feature feature) const = 0;
+    Q_INVOKABLE virtual bool setFeature(Feature feature, const QVariant &value) = 0;
+    Q_INVOKABLE virtual QVariant featureValue(Feature feature) const = 0;
 
-    virtual QString name() const = 0;
+    Q_INVOKABLE virtual QString name() const = 0;
     virtual QString connectionStateString() const = 0;
 
     virtual bool connectToDevice() = 0;
     virtual void disconnectFromDevice() = 0;
 signals:
-    void batteryVoltageUpdated();
+    void batteryPercentageUpdated();
     void connectionStateChanged(ConnectionState oldState, ConnectionState newState);
+    void connectionStateStringChanged();
 
 protected:
     ConnectionState m_connectionState = Disconnected;
     void setConnectionState(ConnectionState state);
 };
 
-#endif // ABSTRACTRC_CAR_H

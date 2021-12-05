@@ -1,3 +1,6 @@
 [submodule "QMLVirtualJoystick"]
 	path = qml/QMLVirtualJoystick
 	url = git@github.com:martonmiklos/QMLVirtualJoystick.git
+[submodule "Qt-AES"]
+	path = Qt-AES
+	url = git@github.com:bricke/Qt-AES.git

@@ -17,6 +17,7 @@ CONFIG += sailfishapp
 QT += bluetooth
 
 SOURCES += src/sailfish-ble-rc.cpp \
+    Qt-AES/qaesencryption.cpp \
     abstract_rc_car.cpp \
     availabledevicesmodel.cpp \
     ble_devicescanner.cpp \
@@ -54,6 +55,7 @@ CONFIG += qml_debug
 #TRANSLATIONS += translations/sailfish-ble-rc-de.ts
 
 HEADERS += \
+    Qt-AES/qaesencryption.h \
     abstract_rc_car.h \
     availabledevicesmodel.h \
     ble_devicescanner.h \

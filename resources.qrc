@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>res/deviceIcons/shell.png</file>
         <file>res/go-previous.svg</file>
+        <file>res/turbo_active.png</file>
+        <file>res/turbo.png</file>
     </qresource>
 </RCC>

@@ -16,6 +16,8 @@ ListItem {
 
     Row {
         id: row
+        spacing: Theme.paddingSmall
+        anchors.leftMargin: Theme.paddingMedium
         Column {
             Text {
                 id: nameText

@@ -6,12 +6,22 @@ Page {
     id: connectingPage
 
     Text {
+        id: connecingText
         text: qsTr("Connecting...")
         font.pixelSize: Theme.fontSizeLarge
         color: Theme.primaryColor
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         anchors.topMargin: Theme.paddingLarge
+    }
+
+    Text {
+        id: connectionStateText
+        font.pixelSize: Theme.fontSizeSmall
+        color: Theme.primaryColor
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: connecingText.bottom
+        anchors.topMargin: Theme.paddingSmall
     }
 
     BusyIndicator {
@@ -35,10 +45,14 @@ Page {
     Connections {
         target: AvailableDevicesModel
         onCurrentDeviceConnectionStateChanged: {
-            if (newState === AbstractRC_Car.Disconnected)
+            if (newState == AbstractRC_Car.Disconnected)
                 pageStack.push(Qt.resolvedUrl("SearchPage.qml"));
-            else if (newState === AbstractRC_Car.Connected)
+            else if (newState == AbstractRC_Car.Connected)
                 pageStack.push(Qt.resolvedUrl("DrivePage.qml"));
+        }
+        onCurrentDeviceConnectionStateStringChanged: {
+            console.log(stateString)
+            connectionStateText.text = stateString
         }
     }
 }

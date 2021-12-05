@@ -1,10 +1,13 @@
 #include "shell_rc_car.h"
 
+#include "Qt-AES/qaesencryption.h"
 #include <QLowEnergyCharacteristic>
 
 QString Shell_RC_Car::CONTROL_SERVICE_UUID = "0000fff0-0000-1000-8000-00805f9b34fb";
 QString Shell_RC_Car::CONTROL_CHARACTERISTICS_UUID = "d44bc439-abfd-45a2-b575-925416129600";
+QString Shell_RC_Car::BATTERY_CHARACTERISTICS_UUID = "d44bc439-abfd-45a2-b575-925416129601";
 
+QByteArray Shell_RC_Car::AES_KEY = QByteArrayLiteral("\x34\x52\x2a\x5b\x7a\x6e\x49\x2c\x08\x09\x0a\x9d\x8d\x2a\x23\xf8");
 QByteArray Shell_RC_Car::IDLE_COMMAND = QByteArrayLiteral("\x02\x5e\x69\x5a\x48\xff\x2a\x43\x8c\xa6\x80\xf8\x3e\x04\xe4\x5d"); // // Alapállapotba állít
 QByteArray Shell_RC_Car::FORWARD_COMMAND = QByteArrayLiteral("\x29\x60\x9c\x66\x48\x52\xcf\xf1\xb0\xf0\xcb\xb9\x80\x14\xbd\x2c"); // // Előre
 QByteArray Shell_RC_Car::FORWARD_TURBO_COMMAND = QByteArrayLiteral("\xe6\x55\x67\xda\x8e\x6c\x56\x0d\x09\xd3\x73\x3a\x7f\x47\xff\x06"); // // Turbó előre
@@ -27,6 +30,8 @@ Shell_RC_Car::Shell_RC_Car(QObject *parent) :
     m_sendTimer.setSingleShot(false);
     m_sendTimer.setInterval(100);
     connect(&m_sendTimer, &QTimer::timeout, this, &Shell_RC_Car::send);
+
+    m_aesDecryptor = new QAESEncryption(QAESEncryption::AES_128, QAESEncryption::ECB);
 }
 
 void Shell_RC_Car::setThrottle(float throttle)
@@ -76,7 +81,22 @@ bool Shell_RC_Car::setFeature(AbstractRC_Car::Feature feature, const QVariant &v
 
     if (feature == Feature::TurboMode)
         m_turbo = value.toBool();
+    else if (feature == Feature::Lamp)
+        m_lamp = value.toBool();
     return true;
+}
+
+QVariant Shell_RC_Car::featureValue(Feature feature) const
+{
+    switch (feature) {
+    case AbstractRC_Car::BatteryVoltageQuery:
+        break;
+    case AbstractRC_Car::TurboMode:
+        return m_turbo;
+    case AbstractRC_Car::Lamp:
+        return m_lamp;
+    }
+    return QVariant();
 }
 
 bool Shell_RC_Car::connectToDevice()
@@ -92,6 +112,7 @@ bool Shell_RC_Car::connectToDevice()
 
 void Shell_RC_Car::addLowEnergyService(const QBluetoothUuid &uuid)
 {
+    qWarning() << uuid;
     if (uuid == QBluetoothUuid(CONTROL_SERVICE_UUID) && m_controlService == nullptr)
         m_controlService = m_controller->createServiceObject(uuid);
 }
@@ -103,6 +124,8 @@ void Shell_RC_Car::serviceScanDone()
         if (m_controlService->state() == QLowEnergyService::DiscoveryRequired) {
             connect(m_controlService, SIGNAL(stateChanged(QLowEnergyService::ServiceState)),
                     this, SLOT(controlServiceDetailsDiscovered(QLowEnergyService::ServiceState)));
+            connect(m_controlService, SIGNAL(characteristicChanged(QLowEnergyCharacteristic,QByteArray)),
+                    this, SLOT(characteristicChanged(QLowEnergyCharacteristic,QByteArray)));
             m_controlService->discoverDetails();
             return;
         }
@@ -119,6 +142,20 @@ void Shell_RC_Car::controlServiceDetailsDiscovered(QLowEnergyService::ServiceSta
         return;
 
     processControlServiceCharacteristics();
+}
+
+void Shell_RC_Car::characteristicChanged(const QLowEnergyCharacteristic &info, const QByteArray &value)
+{
+    qWarning() << info.uuid() << value.toHex();
+    if (info.uuid() == QBluetoothUuid(BATTERY_CHARACTERISTICS_UUID)) {
+        QByteArray decoded = m_aesDecryptor->decode(value, AES_KEY);
+        if (decoded.length() == 16) {
+            if (m_batteryPercentage != decoded.at(4)) {
+                m_batteryPercentage = decoded.at(4);
+                emit batteryPercentageUpdated();
+            }
+        }
+    }
 }
 
 void Shell_RC_Car::processControlServiceCharacteristics()
@@ -146,17 +183,9 @@ QString Shell_RC_Car::name() const
     return  tr("Shell BLE RC car");
 }
 
-QString Shell_RC_Car::connectionStateString() const
+qreal Shell_RC_Car::batteryPercentage()
 {
-    switch (m_connectionState) {
-    case AbstractRC_Car::Disconnected:
-        return tr("Not connected");
-    case AbstractRC_Car::Connecting:
-        return tr("Connecting...");
-    case AbstractRC_Car::Connected:
-        return tr("Connected");
-    }
-    return QString();
+    return m_batteryPercentage;
 }
 
 void Shell_RC_Car::send()
