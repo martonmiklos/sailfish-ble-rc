@@ -4,12 +4,13 @@
 
 #include <QBluetoothDeviceInfo>
 #include <QLowEnergyController>
+#include <QElapsedTimer>
 
-class BLE_RC_Car : public AbstractRC_Car
+class BleRcCar : public AbstractRcCar
 {
     Q_OBJECT
 public:
-    BLE_RC_Car(QObject *parent = nullptr);
+    BleRcCar(const QBluetoothDeviceInfo &carInfo, QObject *parent = nullptr);
 
     virtual bool connectToDevice() override;
     virtual void disconnectFromDevice() override;
@@ -31,11 +32,11 @@ protected slots:
     void errorReceived(QLowEnergyController::Error error);
 
 protected:
-    QBluetoothDeviceInfo m_devInfo;
     QLowEnergyController *m_controller = nullptr;
     QString m_errorString, m_connectionStateString;
     void setConnectionStateString(const QString &newConnectionStateString);
 
     bool m_reconnecting = false;
+    QElapsedTimer m_connectTimer;
 };
 

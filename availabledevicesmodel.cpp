@@ -1,6 +1,7 @@
 #include "availabledevicesmodel.h"
 
-#include "shell_rc_car.h"
+#include "brandbase_rc_car.h"
+#include "bburago_rc_car.h"
 
 AvailableDevicesModel::AvailableDevicesModel(QObject *parent)
     : QAbstractListModel(parent)
@@ -8,9 +9,8 @@ AvailableDevicesModel::AvailableDevicesModel(QObject *parent)
     m_statusString = tr("Start discovery from the pulley menu");
     //! [les-devicediscovery-1]
     m_discoveryAgent = new QBluetoothDeviceDiscoveryAgent();
-    //discoveryAgent->setLowEnergyDiscoveryTimeout(5000);
-    connect(m_discoveryAgent, SIGNAL(deviceDiscovered(const QBluetoothDeviceInfo&)),
-            this, SLOT(deviceDiscovered(const QBluetoothDeviceInfo&)));
+    connect(m_discoveryAgent, SIGNAL(deviceDiscovered(QBluetoothDeviceInfo)),
+            this, SLOT(deviceDiscovered(QBluetoothDeviceInfo)));
     connect(m_discoveryAgent, SIGNAL(error(QBluetoothDeviceDiscoveryAgent::Error)),
             this, SLOT(deviceScanError(QBluetoothDeviceDiscoveryAgent::Error)));
     connect(m_discoveryAgent, SIGNAL(finished()), this, SLOT(deviceScanFinished()));
@@ -43,6 +43,10 @@ QVariant AvailableDevicesModel::data(const QModelIndex &index, int role) const
     case AvailableDevicesModel::Index:
         return index.row();
     }
+
+    // for desktop
+    if (role == Qt::DisplayRole)
+        return m_devices.at(index.row()).name();
     return QVariant();
 }
 
@@ -62,12 +66,22 @@ void AvailableDevicesModel::detectDevices()
 
 void AvailableDevicesModel::deviceDiscovered(const QBluetoothDeviceInfo & info)
 {
-    if (Shell_RC_Car::isDevice(info)) {
+    qWarning() << info.address().toString() << info.name();
+    if (BrandbaseRcCar::isDevice(info)) {
         DetectedDevice d;
         d.info = info;
-        d.typeName = tr("Shell Bluetooth RC car");
-        d.imagePath = Shell_RC_Car::imagePath();
-        d.type = Shell;
+        d.typeName = tr("Brandbase Shell Bluetooth RC car");
+        d.imagePath = BrandbaseRcCar::imagePath();
+        d.type = Brandbase;
+        beginInsertRows(QModelIndex(), m_devices.count(), m_devices.count());
+        m_devices.append(d);
+        endInsertRows();
+    } else if (BburagoRcCar::isDevice(info)) {
+        DetectedDevice d;
+        d.info = info;
+        d.typeName = tr("Bburago Ferrari Bluetooth RC car");
+        d.imagePath = BburagoRcCar::imagePath(info);
+        d.type = Bburago;
         beginInsertRows(QModelIndex(), m_devices.count(), m_devices.count());
         m_devices.append(d);
         endInsertRows();
@@ -109,11 +123,11 @@ void AvailableDevicesModel::deviceScanError(QBluetoothDeviceDiscoveryAgent::Erro
     setScanInProgress(false);
 }
 
-void AvailableDevicesModel::currentDeviceConnectionStateChangedSlot(AbstractRC_Car::ConnectionState oldState, AbstractRC_Car::ConnectionState newState)
+void AvailableDevicesModel::currentDeviceConnectionStateChangedSlot(AbstractRcCar::ConnectionState oldState, AbstractRcCar::ConnectionState newState)
 {
     Q_UNUSED(oldState)
     if (m_currentDevice) {
-        if (newState == AbstractRC_Car::Disconnected) {
+        if (newState == AbstractRcCar::Disconnected) {
             m_currentDevice->deleteLater();
             m_currentDevice = nullptr;
         }
@@ -135,7 +149,7 @@ void AvailableDevicesModel::setScanInProgress(bool scanInProgress)
     }
 }
 
-AbstractRC_Car *AvailableDevicesModel::currentDevice() const
+AbstractRcCar *AvailableDevicesModel::currentDevice() const
 {
     return m_currentDevice;
 }
@@ -191,14 +205,18 @@ void AvailableDevicesModel::connectToDevice(int deviceIndex)
             m_currentDevice = nullptr;
         }
         switch (m_devices.at(deviceIndex).type) {
-        case Shell:
-            auto shell = new Shell_RC_Car(this);
-            shell->setDevInfo(m_devices.at(deviceIndex).info);
-            shell->connectToDevice();
-            m_currentDevice = shell;
-            connect(m_currentDevice, &AbstractRC_Car::connectionStateChanged,
+        case Brandbase:
+        case Bburago:
+            BleRcCar *car = nullptr;
+            if (m_devices.at(deviceIndex).type == Brandbase)
+                car = new BrandbaseRcCar(m_devices.at(deviceIndex).info, this);
+            else
+                car = new BburagoRcCar(m_devices.at(deviceIndex).info, this);
+            car->connectToDevice();
+            m_currentDevice = car;
+            connect(m_currentDevice, &AbstractRcCar::connectionStateChanged,
                     this, &AvailableDevicesModel::currentDeviceConnectionStateChangedSlot);
-            connect(m_currentDevice, &AbstractRC_Car::connectionStateStringChanged,
+            connect(m_currentDevice, &AbstractRcCar::connectionStateStringChanged,
                     this, &AvailableDevicesModel::currentDeviceConnectionStateStringChangedSlot);
             break;
         }

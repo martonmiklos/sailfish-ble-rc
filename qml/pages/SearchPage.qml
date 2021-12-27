@@ -27,11 +27,12 @@ Page {
         PullDownMenu {
             MenuItem {
                 text: qsTr("Settings")
-                onClicked: AvailableDevicesModel.detectDevices()
             }
 
             MenuItem {
-                text: qsTr("Discover devices")
+                text: AvailableDevicesModel.scanInProgress
+                      ? qsTr("Discovery in progress...")
+                      : qsTr("Discover devices")
                 enabled: !AvailableDevicesModel.scanInProgress
                 onClicked: AvailableDevicesModel.detectDevices()
             }

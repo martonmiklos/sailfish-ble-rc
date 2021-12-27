@@ -3,7 +3,7 @@
 #include <QObject>
 #include <QVariant>
 
-class AbstractRC_Car : public QObject
+class AbstractRcCar : public QObject
 {
     Q_OBJECT
 public:
@@ -21,7 +21,7 @@ public:
     };
     Q_ENUM(Feature)
 
-    explicit AbstractRC_Car(QObject *parent = nullptr);
+    explicit AbstractRcCar(QObject *parent = nullptr);
     /**
      * @brief setThrottle
      * @param throttle -1 to 1 range

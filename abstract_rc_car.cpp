@@ -1,16 +1,16 @@
 #include "abstract_rc_car.h"
 
-AbstractRC_Car::AbstractRC_Car(QObject *parent) : QObject(parent)
+AbstractRcCar::AbstractRcCar(QObject *parent) : QObject(parent)
 {
 
 }
 
-qreal AbstractRC_Car::batteryPercentage()
+qreal AbstractRcCar::batteryPercentage()
 {
     return 0.0;
 }
 
-void AbstractRC_Car::setConnectionState(AbstractRC_Car::ConnectionState state)
+void AbstractRcCar::setConnectionState(AbstractRcCar::ConnectionState state)
 {
     if (state != m_connectionState) {
         auto oldState = m_connectionState;

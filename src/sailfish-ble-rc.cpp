@@ -5,9 +5,11 @@
 #include "availabledevicesmodel.h"
 
 #include <sailfishapp.h>
+#include <QLoggingCategory>
 
 int main(int argc, char *argv[])
 {
+    //QLoggingCategory::setFilterRules(QStringLiteral("qt.bluetooth* = true"));
     auto uri = "hu.mm.sailfish_ble_rc";
     // SailfishApp::main() will display "qml/sailfish-ble-rc.qml", if you need more
     // control over initialization, you can use:
@@ -19,6 +21,6 @@ int main(int argc, char *argv[])
     //
     // To display the view, call "show()" (will show fullscreen on device).
     qmlRegisterSingletonType<AvailableDevicesModel>    (uri, 1, 0, "AvailableDevicesModel",  AvailableDevicesModel::qmlInstance);
-    qmlRegisterUncreatableType<AbstractRC_Car>(uri, 1, 0, "AbstractRC_Car","AbstractRC_Car is an abstract type");
+    qmlRegisterUncreatableType<AbstractRcCar>(uri, 1, 0, "AbstractRcCar","AbstractRcCar is an abstract type");
     return SailfishApp::main(argc, argv);
 }

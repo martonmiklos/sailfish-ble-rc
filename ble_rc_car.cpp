@@ -1,30 +1,28 @@
 #include "ble_rc_car.h"
 
-BLE_RC_Car::BLE_RC_Car(QObject *parent) :
-    AbstractRC_Car(parent)
+BleRcCar::BleRcCar(const QBluetoothDeviceInfo &carInfo, QObject *parent) :
+    AbstractRcCar(parent)
 {
+    m_controller = new QLowEnergyController(carInfo);
+    m_controller->setRemoteAddressType(QLowEnergyController::RandomAddress);
+    connect(m_controller, &QLowEnergyController::connected, this, &BleRcCar::deviceConnected);
+    connect(m_controller, &QLowEnergyController::disconnected, this, &BleRcCar::deviceDisconnected);
 
+    connect(m_controller, SIGNAL(error(QLowEnergyController::Error)),
+            this, SLOT(errorReceived(QLowEnergyController::Error)));
+    connect(m_controller, SIGNAL(serviceDiscovered(QBluetoothUuid)),
+            this, SLOT(addLowEnergyService(QBluetoothUuid)));
+    connect(m_controller, SIGNAL(discoveryFinished()),
+            this, SLOT(serviceScanDone()));
+    m_controller->setRemoteAddressType(QLowEnergyController::PublicAddress);
 }
 
-bool BLE_RC_Car::connectToDevice()
+bool BleRcCar::connectToDevice()
 {
-    if (m_controller && m_controller->state() == QLowEnergyController::ConnectedState) {
+    if (m_controller->state() == QLowEnergyController::ConnectedState) {
         m_controller->disconnectFromDevice();
         m_reconnecting = true;
     } else {
-        if (!m_controller) {
-            m_controller = new QLowEnergyController(m_devInfo);
-            connect(m_controller, &QLowEnergyController::connected, this, &BLE_RC_Car::deviceConnected);
-            connect(m_controller, &QLowEnergyController::disconnected, this, &BLE_RC_Car::deviceDisconnected);
-
-            connect(m_controller, SIGNAL(error(QLowEnergyController::Error)),
-                    this, SLOT(errorReceived(QLowEnergyController::Error)));
-            connect(m_controller, SIGNAL(serviceDiscovered(QBluetoothUuid)),
-                    this, SLOT(addLowEnergyService(QBluetoothUuid)));
-            connect(m_controller, SIGNAL(discoveryFinished()),
-                    this, SLOT(serviceScanDone()));
-            m_controller->setRemoteAddressType(QLowEnergyController::PublicAddress);
-        }
         m_controller->connectToDevice();
         setConnectionState(Connecting);
         setConnectionStateString(tr("Connecting to device"));
@@ -32,12 +30,12 @@ bool BLE_RC_Car::connectToDevice()
     return true;
 }
 
-void BLE_RC_Car::disconnectFromDevice()
+void BleRcCar::disconnectFromDevice()
 {
     m_controller->disconnectFromDevice();
 }
 
-void BLE_RC_Car::deviceDisconnected()
+void BleRcCar::deviceDisconnected()
 {
 
     if (m_reconnecting) {
@@ -48,29 +46,28 @@ void BLE_RC_Car::deviceDisconnected()
     }
 }
 
-void BLE_RC_Car::deviceConnected()
+void BleRcCar::deviceConnected()
 {
+    m_connectTimer.restart();
     m_controller->discoverServices();
     setConnectionStateString(tr("Discovering services"));
 }
 
-
-
-void BLE_RC_Car::serviceScanDone()
+void BleRcCar::serviceScanDone()
 {
     setConnectionState(Connected);
     setConnectionStateString(tr("Discovering services done, connected"));
 }
 
-void BLE_RC_Car::errorReceived(QLowEnergyController::Error error)
+void BleRcCar::errorReceived(QLowEnergyController::Error error)
 {
-    qWarning() << error;
+    qWarning() << error << m_connectTimer.elapsed();
     if (m_connectionState != Connected) {
         setConnectionStateString(tr("Discovery error: %1").arg(error));
     }
 }
 
-void BLE_RC_Car::setConnectionStateString(const QString &newConnectionStateString)
+void BleRcCar::setConnectionStateString(const QString &newConnectionStateString)
 {
     if (m_connectionStateString != newConnectionStateString) {
         m_connectionStateString = newConnectionStateString;
@@ -78,17 +75,12 @@ void BLE_RC_Car::setConnectionStateString(const QString &newConnectionStateStrin
     }
 }
 
-void BLE_RC_Car::setDevInfo(const QBluetoothDeviceInfo &newDevInfo)
-{
-    m_devInfo = newDevInfo;
-}
-
-QString BLE_RC_Car::connectionStateString() const
+QString BleRcCar::connectionStateString() const
 {
     return m_connectionStateString;
 }
 
-QString BLE_RC_Car::errorString() const
+QString BleRcCar::errorString() const
 {
     return m_errorString;
 }

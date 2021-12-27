@@ -21,7 +21,8 @@ public:
     };
 
     enum DeviceType {
-        Shell,
+        Brandbase,
+        Bburago
     };
 
     class DetectedDevice {
@@ -50,7 +51,7 @@ public:
 
     Q_INVOKABLE void connectToDevice(int deviceIndex);
 
-    Q_INVOKABLE AbstractRC_Car *currentDevice() const;
+    Q_INVOKABLE AbstractRcCar *currentDevice() const;
 
     Q_INVOKABLE QString statusString() const;
     void setStatusString(const QString & statusString);
@@ -64,7 +65,7 @@ private slots:
     void deviceDiscovered(const QBluetoothDeviceInfo&);
     void deviceScanFinished();
     void deviceScanError(QBluetoothDeviceDiscoveryAgent::Error error);
-    void currentDeviceConnectionStateChangedSlot(AbstractRC_Car::ConnectionState oldState, AbstractRC_Car::ConnectionState newState);
+    void currentDeviceConnectionStateChangedSlot(AbstractRcCar::ConnectionState oldState, AbstractRcCar::ConnectionState newState);
     void currentDeviceConnectionStateStringChangedSlot();
 
 Q_SIGNALS:
@@ -79,7 +80,7 @@ private:
     QBluetoothDeviceDiscoveryAgent *m_discoveryAgent = nullptr;
     QList<DetectedDevice> m_devices;
     bool m_scanInProgress = false;
-    AbstractRC_Car *m_currentDevice = nullptr;
+    AbstractRcCar *m_currentDevice = nullptr;
     QString m_statusString;
 };
 

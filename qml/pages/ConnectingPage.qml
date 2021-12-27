@@ -45,9 +45,9 @@ Page {
     Connections {
         target: AvailableDevicesModel
         onCurrentDeviceConnectionStateChanged: {
-            if (newState == AbstractRC_Car.Disconnected)
+            if (newState == AbstractRcCar.Disconnected)
                 pageStack.push(Qt.resolvedUrl("SearchPage.qml"));
-            else if (newState == AbstractRC_Car.Connected)
+            else if (newState == AbstractRcCar.Connected)
                 pageStack.push(Qt.resolvedUrl("DrivePage.qml"));
         }
         onCurrentDeviceConnectionStateStringChanged: {
