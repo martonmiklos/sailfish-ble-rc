@@ -40,7 +40,7 @@ QBluetoothUuid BrandbaseRcCar::controlCharacteristicsUuid() const
     return CONTROL_CHARACTERISTICS_UUID;
 }
 
-void BrandbaseRcCar::characteristicChanged(const QLowEnergyCharacteristic &info, const QByteArray &value)
+void BrandbaseRcCar::batteryCharacteristicChanged(const QLowEnergyCharacteristic &info, const QByteArray &value)
 {
     if (info.uuid() == BATTERY_CHARACTERISTICS_UUID) {
         QByteArray decoded = m_aesDecryptor->decode(value, AES_KEY);
@@ -66,6 +66,21 @@ QString BrandbaseRcCar::imagePath()
 QString BrandbaseRcCar::name() const
 {
     return tr("Brandbase Shell BLE RC car");
+}
+
+void BrandbaseRcCar::serviceScanDone()
+{
+    qWarning() << "BrandbaseRcCar service scan done";
+    if (m_controlService) {
+        if (m_controlService->state() == QLowEnergyService::DiscoveryRequired) {
+            connect(m_controlService, &QLowEnergyService::stateChanged,
+                    this, &BrandbaseRcCar::controlServiceDetailsDiscovered);
+            m_controlService->discoverDetails();
+        }
+    } else {
+        // WTF no control service found...
+        qWarning() << "No control service found";
+    }
 }
 
 
@@ -113,5 +128,14 @@ void BrandbaseRcCar::send()
         }
     }
     m_controlService->writeCharacteristic(m_controlCharacteristics, data, QLowEnergyService::WriteWithoutResponse);
+}
+
+void BrandbaseRcCar::controlServiceDetailsDiscovered(QLowEnergyService::ServiceState newState)
+{
+    ShellRcCar::controlServiceDetailsDiscovered(newState);
+    if (newState == QLowEnergyService::ServiceDiscovered) {
+        /*connect(m_controlService, &QLowEnergyService::characteristicChanged,
+                this,  &BrandbaseRcCar::batteryCharacteristicChanged);*/
+    }
 }
 

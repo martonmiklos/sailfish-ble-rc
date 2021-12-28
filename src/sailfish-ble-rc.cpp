@@ -9,7 +9,7 @@
 
 int main(int argc, char *argv[])
 {
-    //QLoggingCategory::setFilterRules(QStringLiteral("qt.bluetooth* = true"));
+    QLoggingCategory::setFilterRules(QStringLiteral("qt.bluetooth* = true"));
     auto uri = "hu.mm.sailfish_ble_rc";
     // SailfishApp::main() will display "qml/sailfish-ble-rc.qml", if you need more
     // control over initialization, you can use:

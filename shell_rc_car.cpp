@@ -88,41 +88,24 @@ qreal ShellRcCar::batteryPercentage()
     return m_batteryPercentage;
 }
 
-void ShellRcCar::addLowEnergyService(const QBluetoothUuid &uuid)
+void ShellRcCar::serviceDiscovered(const QBluetoothUuid &uuid)
 {
-    if (uuid == controlServiceUuid() && m_controlService == nullptr)
+    if (uuid == controlServiceUuid() && m_controlService == nullptr) {
         m_controlService = m_controller->createServiceObject(uuid);
-}
-
-void ShellRcCar::serviceScanDone()
-{
-    qWarning() << "Service scan done";
-    if (m_controlService) {
         if (m_controlService->state() == QLowEnergyService::DiscoveryRequired) {
             connect(m_controlService, &QLowEnergyService::stateChanged,
                     this, &ShellRcCar::controlServiceDetailsDiscovered);
-            connect(m_controlService, &QLowEnergyService::characteristicChanged,
-                    this,  &ShellRcCar::characteristicChanged);
             m_controlService->discoverDetails();
-            return;
         }
-        processControlServiceCharacteristics();
-    } else {
-        // WTF no control service found...
     }
 }
 
 void ShellRcCar::controlServiceDetailsDiscovered(QLowEnergyService::ServiceState newState)
 {
-    qWarning() << "Control service discovered" << newState;
     if (newState != QLowEnergyService::ServiceDiscovered)
         return;
 
-    processControlServiceCharacteristics();
-}
-
-void ShellRcCar::processControlServiceCharacteristics()
-{
+    qWarning() << "Control service discovered" << newState;
     m_controlCharacteristics = m_controlService->characteristic(controlCharacteristicsUuid());
     if (m_controlCharacteristics.isValid()) {
         qWarning() << "Connected!";
@@ -132,3 +115,4 @@ void ShellRcCar::processControlServiceCharacteristics()
         qWarning() << "No characteristics " << controlCharacteristicsUuid() << " have been found in the control service";
     }
 }
+

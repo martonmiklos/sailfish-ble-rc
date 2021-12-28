@@ -26,7 +26,7 @@ protected slots:
     void deviceConnected();
     void deviceDisconnected();
 
-    virtual void addLowEnergyService(const QBluetoothUuid &uuid) = 0;
+    virtual void serviceDiscovered(const QBluetoothUuid &uuid) = 0;
     virtual void serviceScanDone();
 
     void errorReceived(QLowEnergyController::Error error);

@@ -11,7 +11,7 @@ BleRcCar::BleRcCar(const QBluetoothDeviceInfo &carInfo, QObject *parent) :
     connect(m_controller, SIGNAL(error(QLowEnergyController::Error)),
             this, SLOT(errorReceived(QLowEnergyController::Error)));
     connect(m_controller, SIGNAL(serviceDiscovered(QBluetoothUuid)),
-            this, SLOT(addLowEnergyService(QBluetoothUuid)));
+            this, SLOT(serviceDiscovered(QBluetoothUuid)));
     connect(m_controller, SIGNAL(discoveryFinished()),
             this, SLOT(serviceScanDone()));
     m_controller->setRemoteAddressType(QLowEnergyController::PublicAddress);

@@ -84,6 +84,30 @@ Page {
                 fillMode: Image.Stretch
             }
         }
+
+        Button {
+            id: lampButton
+            width: backButton.width
+            anchors.horizontalCenter: parent.horizontalCenter
+            visible: AvailableDevicesModel.currentDevice().isFeatureSupported(AbstractRcCar.Lamp)
+            onClicked: {
+                AvailableDevicesModel.currentDevice().setFeature(
+                            AbstractRcCar.Lamp,
+                            !AvailableDevicesModel.currentDevice().featureValue(AbstractRcCar.Lamp))
+                lampImage.source = AvailableDevicesModel.currentDevice().featureValue(AbstractRcCar.Lamp)
+                        ? "qrc:/res/lamp_active.png"
+                        : "qrc:/res/lamp_inactive.png"
+            }
+
+            Image {
+                id: lampImage
+                anchors.fill: parent
+                source: AvailableDevicesModel.currentDevice().featureValue(AbstractRcCar.Lamp)
+                        ? "qrc:/res/lamp_active.png"
+                        : "qrc:/res/lamp_inactive.png"
+                fillMode: Image.Stretch
+            }
+        }
     }
 
     VirtualJoystick {

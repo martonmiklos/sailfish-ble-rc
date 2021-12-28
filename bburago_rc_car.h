@@ -14,17 +14,27 @@ public:
     static bool isDevice(const QBluetoothDeviceInfo &info);
     QString name() const override;
     static QString imagePath(const QBluetoothDeviceInfo &info);
+    bool connectToDevice() override;
 
 protected slots:
+    void serviceDiscovered(const QBluetoothUuid &uuid) override;
+    void serviceScanDone() override;
     void send() override;
-    void characteristicChanged(const QLowEnergyCharacteristic &info,
+    void batteryCharacteristicChanged(const QLowEnergyCharacteristic &info,
                                const QByteArray &value) override;
 protected:
     QBluetoothUuid controlServiceUuid() const override;
     QBluetoothUuid controlCharacteristicsUuid() const override;
 
 private:
+    QLowEnergyService *m_batteryService = nullptr;
     static QBluetoothUuid CONTROL_SERVICE_UUID;
+    static QBluetoothUuid BATTERY_SERVICE_UUID;
     static QBluetoothUuid CONTROL_CHARACTERISTICS_UUID;
     static QBluetoothUuid BATTERY_CHARACTERISTICS_UUID;
+
+    QBluetoothUuid batteryServiceUuid() const;
+
+private slots:
+    void batteryServiceDetailsDiscovered(QLowEnergyService::ServiceState newState);
 };

@@ -7,5 +7,7 @@
         <file>res/deviceIcons/bburago_sl-fxx-k-evo.png</file>
         <file>res/deviceIcons/bburago_sl-sf1000.png</file>
         <file>res/deviceIcons/unknown.png</file>
+        <file>res/lamp_inactive.png</file>
+        <file>res/lamp_active.png</file>
     </qresource>
 </RCC>

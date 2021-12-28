@@ -18,8 +18,10 @@ public:
     QString name() const override;
 
 protected slots:
+    void serviceScanDone() override;
     void send() override;
-    void characteristicChanged(const QLowEnergyCharacteristic &info,
+    void controlServiceDetailsDiscovered(QLowEnergyService::ServiceState newState) override;
+    void batteryCharacteristicChanged(const QLowEnergyCharacteristic &info,
                                const QByteArray &value) override;
 
 private:

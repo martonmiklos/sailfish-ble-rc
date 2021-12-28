@@ -19,14 +19,12 @@ public:
     qreal batteryPercentage() override;
 
 protected slots:
-    void serviceScanDone() override;
-    void addLowEnergyService(const QBluetoothUuid &uuid) override;
-    void controlServiceDetailsDiscovered(QLowEnergyService::ServiceState newState);
-    virtual void characteristicChanged(const QLowEnergyCharacteristic &info,
+    void serviceDiscovered(const QBluetoothUuid &uuid) override;
+    virtual void controlServiceDetailsDiscovered(QLowEnergyService::ServiceState newState);
+    virtual void batteryCharacteristicChanged(const QLowEnergyCharacteristic &info,
                                const QByteArray &value) = 0;
 
 protected:
-    virtual void processControlServiceCharacteristics();
     virtual QBluetoothUuid controlServiceUuid() const = 0;
     virtual QBluetoothUuid controlCharacteristicsUuid() const = 0;
 
@@ -43,6 +41,5 @@ protected:
 
     QLowEnergyService *m_controlService = nullptr;
     QLowEnergyCharacteristic m_controlCharacteristics;
-    QLowEnergyCharacteristic m_batteryCharacteristics;
 };
 
