@@ -3,12 +3,17 @@
 #include "brandbase_rc_car.h"
 #include "bburago_rc_car.h"
 
+#include <QBluetoothLocalDevice>
+
 AvailableDevicesModel::AvailableDevicesModel(QObject *parent)
     : QAbstractListModel(parent)
 {
     m_statusString = tr("Start discovery from the pulley menu");
-    //! [les-devicediscovery-1]
-    m_discoveryAgent = new QBluetoothDeviceDiscoveryAgent();
+    auto adapters = QBluetoothLocalDevice::allDevices();
+    if (adapters.count() == 0)
+        return;
+
+    m_discoveryAgent = new QBluetoothDeviceDiscoveryAgent(adapters.last().address());
     connect(m_discoveryAgent, SIGNAL(deviceDiscovered(QBluetoothDeviceInfo)),
             this, SLOT(deviceDiscovered(QBluetoothDeviceInfo)));
     connect(m_discoveryAgent, SIGNAL(error(QBluetoothDeviceDiscoveryAgent::Error)),
@@ -52,6 +57,9 @@ QVariant AvailableDevicesModel::data(const QModelIndex &index, int role) const
 
 void AvailableDevicesModel::detectDevices()
 {
+    if (!m_discoveryAgent)
+        return;
+
     if (m_currentDevice) {
         m_currentDevice->disconnectFromDevice();
         m_currentDevice = nullptr;

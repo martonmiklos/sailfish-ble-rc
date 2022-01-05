@@ -13,8 +13,10 @@ SOURCES += \
     ../../Qt-AES/qaesencryption.cpp \
     ../../abstract_rc_car.cpp \
     ../../availabledevicesmodel.cpp \
+    ../../bburago_rc_car.cpp \
     ../../ble_devicescanner.cpp \
     ../../ble_rc_car.cpp \
+    ../../brandbase_rc_car.cpp \
     ../../shell_rc_car.cpp \
     main.cpp \
     mainwindow.cpp
@@ -23,8 +25,10 @@ HEADERS += \
     ../../Qt-AES/qaesencryption.h \
     ../../abstract_rc_car.h \
     ../../availabledevicesmodel.h \
+    ../../bburago_rc_car.h \
     ../../ble_devicescanner.h \
     ../../ble_rc_car.h \
+    ../../brandbase_rc_car.h \
     ../../shell_rc_car.h \
     mainwindow.h
 

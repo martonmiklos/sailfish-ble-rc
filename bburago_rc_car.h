@@ -16,9 +16,10 @@ public:
     static QString imagePath(const QBluetoothDeviceInfo &info);
     bool connectToDevice() override;
 
+    bool isFeatureSupported(Feature feature) const override;
+
 protected slots:
     void serviceDiscovered(const QBluetoothUuid &uuid) override;
-    void serviceScanDone() override;
     void send() override;
     void batteryCharacteristicChanged(const QLowEnergyCharacteristic &info,
                                const QByteArray &value) override;
@@ -34,6 +35,7 @@ private:
     static QBluetoothUuid BATTERY_CHARACTERISTICS_UUID;
 
     QBluetoothUuid batteryServiceUuid() const;
+    QString m_name;
 
 private slots:
     void batteryServiceDetailsDiscovered(QLowEnergyService::ServiceState newState);

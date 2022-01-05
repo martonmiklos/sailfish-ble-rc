@@ -68,22 +68,6 @@ QString BrandbaseRcCar::name() const
     return tr("Brandbase Shell BLE RC car");
 }
 
-void BrandbaseRcCar::serviceScanDone()
-{
-    qWarning() << "BrandbaseRcCar service scan done";
-    if (m_controlService) {
-        if (m_controlService->state() == QLowEnergyService::DiscoveryRequired) {
-            connect(m_controlService, &QLowEnergyService::stateChanged,
-                    this, &BrandbaseRcCar::controlServiceDetailsDiscovered);
-            m_controlService->discoverDetails();
-        }
-    } else {
-        // WTF no control service found...
-        qWarning() << "No control service found";
-    }
-}
-
-
 void BrandbaseRcCar::send()
 {
     if (m_connectionState != Connected)

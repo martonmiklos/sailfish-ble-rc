@@ -9,5 +9,6 @@
         <file>res/deviceIcons/unknown.png</file>
         <file>res/lamp_inactive.png</file>
         <file>res/lamp_active.png</file>
+        <file>res/deviceIcons/bburago_sl-488-challenge-evo.png</file>
     </qresource>
 </RCC>

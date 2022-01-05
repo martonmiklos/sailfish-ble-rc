@@ -18,7 +18,6 @@ public:
     QString name() const override;
 
 protected slots:
-    void serviceScanDone() override;
     void send() override;
     void controlServiceDetailsDiscovered(QLowEnergyService::ServiceState newState) override;
     void batteryCharacteristicChanged(const QLowEnergyCharacteristic &info,

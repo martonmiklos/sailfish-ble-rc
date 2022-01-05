@@ -9,23 +9,19 @@ QBluetoothUuid BburagoRcCar::BATTERY_CHARACTERISTICS_UUID = QBluetoothUuid(QStri
 BburagoRcCar::BburagoRcCar(const QBluetoothDeviceInfo &carInfo, QObject *parent) :
     ShellRcCar(carInfo, parent)
 {
-
-}
-
-void BburagoRcCar::serviceScanDone()
-{
-    qWarning() << "BburagoRcCar service scan done";
+    m_name = carInfo.name();
 }
 
 bool BburagoRcCar::isDevice(const QBluetoothDeviceInfo &info)
 {
     return info.name().startsWith(QStringLiteral("SL-FXX-K Evo"))
-            || info.name().startsWith(QStringLiteral("SL-SF1000"));
+            || info.name().startsWith(QStringLiteral("SL-SF1000"))
+            || info.name().startsWith(QStringLiteral("SL-488 Challenge Evo"));
 }
 
 QString BburagoRcCar::name() const
 {
-    return  tr("Bburago Shell BLE RC car");
+    return m_name;
 }
 
 QString BburagoRcCar::imagePath(const QBluetoothDeviceInfo &info)
@@ -34,16 +30,28 @@ QString BburagoRcCar::imagePath(const QBluetoothDeviceInfo &info)
         return QStringLiteral("qrc:/res/deviceIcons/bburago_sl-fxx-k-evo.png");
     else if (info.name().startsWith(QStringLiteral("SL-SF1000")))
         return QStringLiteral("qrc:/res/deviceIcons/bburago_sl-sf1000.png");
+    else if (info.name().startsWith(QStringLiteral("SL-488 Challenge Evo")))
+        return QStringLiteral("qrc:/res/deviceIcons/bburago_sl-488-challenge-evo.png");
     return QStringLiteral("qrc:/res/deviceIcons/unknown.png");
 }
 
 bool BburagoRcCar::connectToDevice()
 {
-    disconnect(m_batteryService, nullptr, this, nullptr);
-    delete m_batteryService;
-    m_batteryService = nullptr;
-
+    if (m_batteryService) {
+        disconnect(m_batteryService, nullptr, this, nullptr);
+        delete m_batteryService;
+        m_batteryService = nullptr;
+    }
     return ShellRcCar::connectToDevice();
+}
+
+bool BburagoRcCar::isFeatureSupported(Feature feature) const
+{
+    if (feature == AbstractRcCar::Lamp) {
+        if (m_name.startsWith("SL-SF1000"))
+            return false;
+    }
+    return ShellRcCar::isFeatureSupported(feature);
 }
 
 void BburagoRcCar::serviceDiscovered(const QBluetoothUuid &uuid)

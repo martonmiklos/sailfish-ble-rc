@@ -27,7 +27,6 @@ protected slots:
     void deviceDisconnected();
 
     virtual void serviceDiscovered(const QBluetoothUuid &uuid) = 0;
-    virtual void serviceScanDone();
 
     void errorReceived(QLowEnergyController::Error error);
 
@@ -38,5 +37,6 @@ protected:
 
     bool m_reconnecting = false;
     QElapsedTimer m_connectTimer;
+    QBluetoothDeviceInfo m_carInfo;
 };
 
