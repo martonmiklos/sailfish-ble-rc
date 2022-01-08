@@ -13,7 +13,11 @@ bool BleRcCar::connectToDevice()
     if (m_controller && m_controller->state() == QLowEnergyController::ConnectedState)
         return false;
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
     m_controller = QLowEnergyController::createCentral(m_carInfo, this);
+#else
+    m_controller = new QLowEnergyController(m_carInfo.address(), this);
+#endif
     m_controller->setRemoteAddressType(QLowEnergyController::RandomAddress);
     connect(m_controller, &QLowEnergyController::connected, this, &BleRcCar::deviceConnected);
     connect(m_controller, &QLowEnergyController::disconnected, this, &BleRcCar::deviceDisconnected);
