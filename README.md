@@ -5,9 +5,13 @@
 App for controlling a BLE toy cars from a Sailfish OS device
 
 ## Motivation
-* The Android app is a bloatware: heats up the phone (maybe due to the 3D graphics), loads slowly
+* The Android app is a bloatware: 
+  * Heats up the phone (maybe due to the 3D graphics)
+  * Loads very slowly
+  * The Nissan app available with throttle on the left mode (left handed by default??)
 * Aliendalvik has no Bluetooth support on SFOS
 * Reverse engineering is fun!
+* Planning support for USB-OTG game controllers
 
 ## Supported devices
 
