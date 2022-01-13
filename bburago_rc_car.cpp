@@ -113,7 +113,7 @@ QBluetoothUuid BburagoRcCar::batteryServiceUuid() const
 
 void BburagoRcCar::batteryServiceDetailsDiscovered(QLowEnergyService::ServiceState newState)
 {
-    /*if (newState == QLowEnergyService::ServiceDiscovered) {
+    if (newState == QLowEnergyService::ServiceDiscovered) {
         auto batteryCharacteristic = m_batteryService->characteristic(BATTERY_CHARACTERISTICS_UUID);
         if (batteryCharacteristic.isValid()) {
             QLowEnergyDescriptor notification = batteryCharacteristic.descriptor(QBluetoothUuid::ClientCharacteristicConfiguration);
@@ -128,7 +128,7 @@ void BburagoRcCar::batteryServiceDetailsDiscovered(QLowEnergyService::ServiceSta
         } else {
             qWarning() << "No battery characteristics found";
         }
-    }*/
+    }
 }
 
 QBluetoothUuid BburagoRcCar::controlCharacteristicsUuid() const

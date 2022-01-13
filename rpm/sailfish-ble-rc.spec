@@ -37,7 +37,7 @@ Short description of my Sailfish OS Application
 # >> build pre
 # << build pre
 
-%qmake5 
+%qmake5 MY_TARGET=Sailfish
 
 make %{?_smp_mflags}
 

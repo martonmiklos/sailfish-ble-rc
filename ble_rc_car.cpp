@@ -37,7 +37,7 @@ void BleRcCar::deviceConnected()
 {
     m_connectTimer.restart();
     m_controller->discoverServices();
-    setConnectionStateString(tr("Discovering services"));
+    setConnectionStateString(tr("Discovering BLE services"));
 }
 
 void BleRcCar::disconnectFromDevice()

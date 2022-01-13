@@ -4,8 +4,15 @@
 
 #include "availabledevicesmodel.h"
 
+#ifdef Q_OS_ANDROID
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#elif defined(Q_OS_SAILFISH_OS)
 #include <sailfishapp.h>
+#endif
+
 #include <QLoggingCategory>
+
 
 int main(int argc, char *argv[])
 {
@@ -22,5 +29,23 @@ int main(int argc, char *argv[])
     // To display the view, call "show()" (will show fullscreen on device).
     qmlRegisterSingletonType<AvailableDevicesModel>    (uri, 1, 0, "AvailableDevicesModel",  AvailableDevicesModel::qmlInstance);
     qmlRegisterUncreatableType<AbstractRcCar>(uri, 1, 0, "AbstractRcCar","AbstractRcCar is an abstract type");
+#if defined(Q_OS_ANDROID)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
+    QGuiApplication app(argc, argv);
+
+    QQmlApplicationEngine engine;
+    const QUrl url(QStringLiteral("qrc:/main.qml"));
+    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
+                     &app, [url](QObject *obj, const QUrl &objUrl) {
+        if (!obj && url == objUrl)
+            QCoreApplication::exit(-1);
+    }, Qt::QueuedConnection);
+    engine.load(url);
+
+    return app.exec();
+#elif defined(Q_OS_SAILFISH_OS)
     return SailfishApp::main(argc, argv);
+#endif
 }

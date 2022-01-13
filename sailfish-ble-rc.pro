@@ -12,6 +12,10 @@
 # The name of your application
 TARGET = sailfish-ble-rc
 
+equals(MY_TARGET, "Sailfish") {
+    DEFINES += Q_OS_SAILFISH_OS
+}
+
 CONFIG += sailfishapp
 
 QT += bluetooth
