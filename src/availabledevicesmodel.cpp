@@ -19,6 +19,7 @@ AvailableDevicesModel::AvailableDevicesModel(QObject *parent)
     connect(m_discoveryAgent, SIGNAL(error(QBluetoothDeviceDiscoveryAgent::Error)),
             this, SLOT(deviceScanError(QBluetoothDeviceDiscoveryAgent::Error)));
     connect(m_discoveryAgent, SIGNAL(finished()), this, SLOT(deviceScanFinished()));
+    connect(m_discoveryAgent, SIGNAL(canceled()), this, SLOT(deviceScanCancelled()));
 }
 
 int AvailableDevicesModel::rowCount(const QModelIndex &parent) const
@@ -103,6 +104,11 @@ void AvailableDevicesModel::deviceScanFinished()
         setStatusString(tr("No devices found"));
     else
         setStatusString(tr("Discovered devices"));
+}
+
+void AvailableDevicesModel::deviceScanCancelled()
+{
+    connectToDevice(m_deviceToOpenOnDiscoverCancel);
 }
 
 void AvailableDevicesModel::deviceScanError(QBluetoothDeviceDiscoveryAgent::Error error)
@@ -207,26 +213,32 @@ QHash<int, QByteArray> AvailableDevicesModel::roleNames() const
 
 void AvailableDevicesModel::connectToDevice(int deviceIndex)
 {
-    if (deviceIndex < m_devices.count()) {
-        if (m_currentDevice) {
-            delete m_currentDevice;
-            m_currentDevice = nullptr;
-        }
-        switch (m_devices.at(deviceIndex).type) {
-        case Brandbase:
-        case Bburago:
-            BleRcCar *car = nullptr;
-            if (m_devices.at(deviceIndex).type == Brandbase)
-                car = new BrandbaseRcCar(m_devices.at(deviceIndex).info, this);
-            else
-                car = new BburagoRcCar(m_devices.at(deviceIndex).info, this);
-            car->connectToDevice();
-            m_currentDevice = car;
-            connect(m_currentDevice, &AbstractRcCar::connectionStateChanged,
-                    this, &AvailableDevicesModel::currentDeviceConnectionStateChangedSlot);
-            connect(m_currentDevice, &AbstractRcCar::connectionStateStringChanged,
-                    this, &AvailableDevicesModel::currentDeviceConnectionStateStringChangedSlot);
-            break;
+    if (m_discoveryAgent->isActive()) {
+        // deviceScanCancelled will call this function back
+        m_deviceToOpenOnDiscoverCancel = deviceIndex;
+        m_discoveryAgent->stop();
+    } else {
+        if (deviceIndex < m_devices.count()) {
+            if (m_currentDevice) {
+                delete m_currentDevice;
+                m_currentDevice = nullptr;
+            }
+            switch (m_devices.at(deviceIndex).type) {
+            case Brandbase:
+            case Bburago:
+                BleRcCar *car = nullptr;
+                if (m_devices.at(deviceIndex).type == Brandbase)
+                    car = new BrandbaseRcCar(m_devices.at(deviceIndex).info, this);
+                else
+                    car = new BburagoRcCar(m_devices.at(deviceIndex).info, this);
+                car->connectToDevice();
+                m_currentDevice = car;
+                connect(m_currentDevice, &AbstractRcCar::connectionStateChanged,
+                        this, &AvailableDevicesModel::currentDeviceConnectionStateChangedSlot);
+                connect(m_currentDevice, &AbstractRcCar::connectionStateStringChanged,
+                        this, &AvailableDevicesModel::currentDeviceConnectionStateStringChangedSlot);
+                break;
+            }
         }
     }
 }

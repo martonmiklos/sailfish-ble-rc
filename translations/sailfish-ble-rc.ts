@@ -2,6 +2,75 @@
 <!DOCTYPE TS>
 <TS version="2.1">
 <context>
+    <name>AvailableDevicesModel</name>
+    <message>
+        <source>Start discovery from the pulley menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Discovering devices...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Brandbase Shell Bluetooth RC car</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bburago Ferrari Bluetooth RC car</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No devices found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Discovered devices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>IO error during discovery</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please turn on Bluetooth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid BT adapter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Platform not supported</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown error during discovery</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>BleRcCar</name>
+    <message>
+        <source>Connecting to device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Discovering BLE services</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Discovery error: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>BrandbaseRcCar</name>
+    <message>
+        <source>Brandbase Shell BLE RC car</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ConnectingPage</name>
     <message>
         <source>Connecting...</source>

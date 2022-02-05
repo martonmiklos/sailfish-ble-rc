@@ -64,6 +64,7 @@ private slots:
     // QBluetoothDeviceDiscoveryAgent related
     void deviceDiscovered(const QBluetoothDeviceInfo&);
     void deviceScanFinished();
+    void deviceScanCancelled();
     void deviceScanError(QBluetoothDeviceDiscoveryAgent::Error error);
     void currentDeviceConnectionStateChangedSlot(AbstractRcCar::ConnectionState oldState, AbstractRcCar::ConnectionState newState);
     void currentDeviceConnectionStateStringChangedSlot();
@@ -82,5 +83,6 @@ private:
     bool m_scanInProgress = false;
     AbstractRcCar *m_currentDevice = nullptr;
     QString m_statusString;
+    int m_deviceToOpenOnDiscoverCancel = -1;
 };
 

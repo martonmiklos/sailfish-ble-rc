@@ -22,13 +22,13 @@ QT += bluetooth
 
 SOURCES += src/sailfish-ble-rc.cpp \
     Qt-AES/qaesencryption.cpp \
-    abstract_rc_car.cpp \
-    availabledevicesmodel.cpp \
-    bburago_rc_car.cpp \
-    ble_devicescanner.cpp \
-    ble_rc_car.cpp \
-    brandbase_rc_car.cpp \
-    shell_rc_car.cpp
+    src/abstract_rc_car.cpp \
+    src/availabledevicesmodel.cpp \
+    src/bburago_rc_car.cpp \
+    src/ble_devicescanner.cpp \
+    src/ble_rc_car.cpp \
+    src/brandbase_rc_car.cpp \
+    src/shell_rc_car.cpp
 
 DISTFILES += qml/sailfish-ble-rc.qml \
     qml/QMLVirtualJoystick/VirtualJoystick.qml \
@@ -62,13 +62,13 @@ CONFIG += qml_debug
 
 HEADERS += \
     Qt-AES/qaesencryption.h \
-    abstract_rc_car.h \
-    availabledevicesmodel.h \
-    bburago_rc_car.h \
-    ble_devicescanner.h \
-    ble_rc_car.h \
-    brandbase_rc_car.h \
-    shell_rc_car.h
+    src/abstract_rc_car.h \
+    src/availabledevicesmodel.h \
+    src/bburago_rc_car.h \
+    src/ble_devicescanner.h \
+    src/ble_rc_car.h \
+    src/brandbase_rc_car.h \
+    src/shell_rc_car.h
 
 RESOURCES += \
     resources.qrc
