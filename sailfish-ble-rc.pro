@@ -20,7 +20,14 @@ CONFIG += sailfishapp
 
 QT += bluetooth
 
-SOURCES += src/sailfish-ble-rc.cpp \
+isEmpty(VERSION) {
+    VERSION = 1.0.0
+    message("VERSION is unset, assuming $$VERSION")
+}
+
+DEFINES += APP_VERSION=\\\"$$VERSION\\\" \
+
+SOURCES += \
     Qt-AES/qaesencryption.cpp \
     src/abstract_rc_car.cpp \
     src/availabledevicesmodel.cpp \
@@ -28,6 +35,7 @@ SOURCES += src/sailfish-ble-rc.cpp \
     src/ble_devicescanner.cpp \
     src/ble_rc_car.cpp \
     src/brandbase_rc_car.cpp \
+    src/main.cpp \
     src/shell_rc_car.cpp
 
 DISTFILES += qml/sailfish-ble-rc.qml \
@@ -35,6 +43,7 @@ DISTFILES += qml/sailfish-ble-rc.qml \
     qml/QMLVirtualJoystick/background.png \
     qml/QMLVirtualJoystick/finger.png \
     qml/cover/CoverPage.qml \
+    qml/pages/AboutPage.qml \
     qml/pages/ConnectingPage.qml \
     qml/pages/DrivePage.qml \
     qml/pages/Settings.qml \

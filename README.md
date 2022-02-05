@@ -35,6 +35,3 @@ Command is sent in 8 byte to the "0000fff1-0000-1000-8000-00805f9b34fb" characte
 https://github.com/martonmiklos/sailfish-ble-rc/blob/master/bburago_rc_car.cpp#L81
 
 The battery notification is sent periodically through the "00002a19-0000-1000-8000-00805f9b34fb" characteristic in a single byte in percentage format. (You need to enable notifications to this characteristics see: [here]](https://github.com/martonmiklos/sailfish-ble-rc/blob/master/bburago_rc_car.cpp#L112))
-
-## Issues
-I got random disconnects on SFOS which investigation is still ongoing. See: https://forum.sailfishos.org/c/app-development/5

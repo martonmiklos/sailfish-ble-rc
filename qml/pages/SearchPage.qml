@@ -26,6 +26,11 @@ Page {
     SilicaListView {
         PullDownMenu {
             MenuItem {
+                text: qsTr("About SailRC")
+                onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"));
+            }
+
+            MenuItem {
                 text: qsTr("Settings")
             }
 

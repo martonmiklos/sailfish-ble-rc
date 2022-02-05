@@ -16,6 +16,11 @@
 
 int main(int argc, char *argv[])
 {
+    QCoreApplication::setOrganizationDomain("hu");
+    QCoreApplication::setOrganizationName("MM");
+    QCoreApplication::setApplicationName("SailRC");
+    QCoreApplication::setApplicationVersion(APP_VERSION);
+
     QLoggingCategory::setFilterRules(QStringLiteral("qt.bluetooth* = true"));
     auto uri = "hu.mm.sailfish_ble_rc";
     // SailfishApp::main() will display "qml/sailfish-ble-rc.qml", if you need more
@@ -27,6 +32,7 @@ int main(int argc, char *argv[])
     //   - SailfishApp::pathToMainQml() to get a QUrl to the main QML file
     //
     // To display the view, call "show()" (will show fullscreen on device).
+
     qmlRegisterSingletonType<AvailableDevicesModel>    (uri, 1, 0, "AvailableDevicesModel",  AvailableDevicesModel::qmlInstance);
     qmlRegisterUncreatableType<AbstractRcCar>(uri, 1, 0, "AbstractRcCar","AbstractRcCar is an abstract type");
 #if defined(Q_OS_ANDROID)

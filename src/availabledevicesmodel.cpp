@@ -216,6 +216,8 @@ void AvailableDevicesModel::connectToDevice(int deviceIndex)
     if (m_discoveryAgent->isActive()) {
         // deviceScanCancelled will call this function back
         m_deviceToOpenOnDiscoverCancel = deviceIndex;
+        setScanInProgress(false);
+        setStatusString(tr("Discovered devices"));
         m_discoveryAgent->stop();
     } else {
         if (deviceIndex < m_devices.count()) {
