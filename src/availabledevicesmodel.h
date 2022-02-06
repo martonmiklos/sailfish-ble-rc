@@ -16,6 +16,7 @@ public:
     enum Role {
         Name = Qt::UserRole + 1,
         TypeName,
+        Alias,
         ImagePath,
         Index
     };
@@ -27,14 +28,17 @@ public:
 
     class DetectedDevice {
     public:
-        DetectedDevice() = default;
+        DetectedDevice(const QBluetoothDeviceInfo &btInfo, DeviceType dtype);
         QString imagePath, typeName;
-        QBluetoothDeviceInfo info;
         DeviceType type;
-        QString name() const
-        {
-            return info.name();
-        }
+        QString name() const;
+        QString alias() const;
+        void setAlias(const QString &newAlias);
+        const QBluetoothDeviceInfo &btInfo() const;
+
+    private:
+        QBluetoothDeviceInfo m_btInfo;
+        QString m_alias;
     };
 
     explicit AvailableDevicesModel(QObject *parent = nullptr);

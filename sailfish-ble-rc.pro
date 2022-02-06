@@ -36,6 +36,7 @@ SOURCES += \
     src/ble_rc_car.cpp \
     src/brandbase_rc_car.cpp \
     src/main.cpp \
+    src/settings.cpp \
     src/shell_rc_car.cpp
 
 DISTFILES += qml/sailfish-ble-rc.qml \
@@ -77,6 +78,7 @@ HEADERS += \
     src/ble_devicescanner.h \
     src/ble_rc_car.h \
     src/brandbase_rc_car.h \
+    src/settings.h \
     src/shell_rc_car.h
 
 RESOURCES += \

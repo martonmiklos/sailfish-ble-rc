@@ -2,6 +2,7 @@
 
 #include "brandbase_rc_car.h"
 #include "bburago_rc_car.h"
+#include "settings.h"
 
 #include <QBluetoothLocalDevice>
 
@@ -48,6 +49,8 @@ QVariant AvailableDevicesModel::data(const QModelIndex &index, int role) const
         return m_devices.at(index.row()).imagePath;
     case AvailableDevicesModel::Index:
         return index.row();
+    case AvailableDevicesModel::Alias:
+        return m_devices.at(index.row()).alias();
     }
 
     // for desktop
@@ -77,8 +80,7 @@ void AvailableDevicesModel::deviceDiscovered(const QBluetoothDeviceInfo & info)
 {
     qWarning() << info.address().toString() << info.name();
     if (BrandbaseRcCar::isDevice(info)) {
-        DetectedDevice d;
-        d.info = info;
+        DetectedDevice d(info, Brandbase);
         d.typeName = tr("Brandbase Shell Bluetooth RC car");
         d.imagePath = BrandbaseRcCar::imagePath();
         d.type = Brandbase;
@@ -86,8 +88,7 @@ void AvailableDevicesModel::deviceDiscovered(const QBluetoothDeviceInfo & info)
         m_devices.append(d);
         endInsertRows();
     } else if (BburagoRcCar::isDevice(info)) {
-        DetectedDevice d;
-        d.info = info;
+        DetectedDevice d(info, Bburago);
         d.typeName = tr("Bburago Ferrari Bluetooth RC car");
         d.imagePath = BburagoRcCar::imagePath(info);
         d.type = Bburago;
@@ -205,6 +206,7 @@ QHash<int, QByteArray> AvailableDevicesModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles[TypeName] = QByteArrayLiteral("TypeName");
+    roles[Alias] = QByteArrayLiteral("Alias");
     roles[ImagePath] = QByteArrayLiteral("ImagePath");
     roles[Name] = QByteArrayLiteral("Name");
     roles[Index] = QByteArrayLiteral("Index");
@@ -230,9 +232,9 @@ void AvailableDevicesModel::connectToDevice(int deviceIndex)
             case Bburago:
                 BleRcCar *car = nullptr;
                 if (m_devices.at(deviceIndex).type == Brandbase)
-                    car = new BrandbaseRcCar(m_devices.at(deviceIndex).info, this);
+                    car = new BrandbaseRcCar(m_devices.at(deviceIndex).btInfo(), this);
                 else
-                    car = new BburagoRcCar(m_devices.at(deviceIndex).info, this);
+                    car = new BburagoRcCar(m_devices.at(deviceIndex).btInfo(), this);
                 car->connectToDevice();
                 m_currentDevice = car;
                 connect(m_currentDevice, &AbstractRcCar::connectionStateChanged,
@@ -243,4 +245,35 @@ void AvailableDevicesModel::connectToDevice(int deviceIndex)
             }
         }
     }
+}
+
+AvailableDevicesModel::DetectedDevice::DetectedDevice(const QBluetoothDeviceInfo &btInfo, DeviceType dtype) :
+    type(dtype)
+{
+    m_btInfo = btInfo;
+    m_alias = Settings::instance()->alias(m_btInfo.address().toString());
+    if (m_alias.isEmpty())
+        m_alias = m_btInfo.address().toString();
+}
+
+QString AvailableDevicesModel::DetectedDevice::name() const
+{
+    return m_btInfo.name();
+}
+
+QString AvailableDevicesModel::DetectedDevice::alias() const
+{
+    return m_alias;
+}
+
+void AvailableDevicesModel::DetectedDevice::setAlias(const QString &newAlias)
+{
+    if (m_alias != newAlias) {
+        Settings::instance()->setAlias(m_btInfo.address().toString(), newAlias);
+    }
+}
+
+const QBluetoothDeviceInfo &AvailableDevicesModel::DetectedDevice::btInfo() const
+{
+    return m_btInfo;
 }

@@ -7,7 +7,9 @@ ListItem {
     property string name : ""
     property string typeName : ""
     property string image : ""
+    property string alias: ""
     property int index: -1
+    height: row.height + Theme.paddingSmall
 
     onClicked: {
         AvailableDevicesModel.connectToDevice(index)
@@ -18,6 +20,7 @@ ListItem {
         id: row
         spacing: Theme.paddingSmall
         anchors.leftMargin: Theme.paddingMedium
+        anchors.rightMargin: Theme.paddingMedium
         Column {
             Text {
                 id: nameText
@@ -33,19 +36,22 @@ ListItem {
                 font.pixelSize: Theme.fontSizeSmall
                 color: Theme.primaryColor
             }
-            width: (detectedDevice.width - row.height - Theme.paddingLarge)
+
+            Text {
+                id: aliasText
+                text: detectedDevice.alias
+                font.pixelSize: Theme.fontSizeSmall
+                color: Theme.primaryColor
+            }
+
+            width: (detectedDevice.width - row.height * 1.2 - Theme.paddingLarge * 2)
         }
         Image {
             id: name
             source: detectedDevice.image
             height: row.height
-            width: row.height
+            width: row.height * 1.2
             fillMode: Image.PreserveAspectFit
-        }
-    }
-    menu: ContextMenu {
-        MenuItem {
-            text: qsTr("Autoconnect")
         }
     }
 }

@@ -112,14 +112,7 @@
 <context>
     <name>CoverPage</name>
     <message>
-        <source>My Cover</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>DiscoveredRCItem</name>
-    <message>
-        <source>Autoconnect</source>
+        <source>SailRC</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

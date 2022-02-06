@@ -20,6 +20,7 @@ Page {
             typeName: TypeName
             image: ImagePath
             index: Index
+            alias: Alias
         }
     }
 
