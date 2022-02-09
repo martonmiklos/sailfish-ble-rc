@@ -14,7 +14,7 @@ Page {
 
     Component {
         id: detectedDeviceDelegate
-        DiscoveredRCItem {
+        DiscoveredRcItem {
             width: parent.width
             name: Name
             typeName: TypeName

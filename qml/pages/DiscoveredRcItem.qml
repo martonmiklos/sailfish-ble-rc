@@ -54,4 +54,18 @@ ListItem {
             fillMode: Image.PreserveAspectFit
         }
     }
+
+    menu: Component {
+        ContextMenu {
+            MenuItem {
+                text: AutoConnect ? qsTr("Disable automatic connect") : qsTr("Enable automatic connect")
+                onClicked: AvailableDevicesModel.setAutoConnect(Index, !AutoConnect)
+            }
+
+            MenuItem {
+                text: qsTr("Edit alias")
+                onClicked: pageStack.push(Qt.resolvedUrl("EditAlias.qml"));
+            }
+        }
+    }
 }

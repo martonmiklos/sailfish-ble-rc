@@ -18,7 +18,8 @@ public:
         TypeName,
         Alias,
         ImagePath,
-        Index
+        Index,
+        AutoConnect
     };
 
     enum DeviceType {
@@ -35,10 +36,13 @@ public:
         QString alias() const;
         void setAlias(const QString &newAlias);
         const QBluetoothDeviceInfo &btInfo() const;
+        bool autoConnect() const;
+        void setAutoConnect(bool newAutoConnect);
 
     private:
         QBluetoothDeviceInfo m_btInfo;
         QString m_alias;
+        bool m_autoConnect = false;
     };
 
     explicit AvailableDevicesModel(QObject *parent = nullptr);
@@ -63,6 +67,7 @@ public:
     static QObject *qmlInstance(QQmlEngine *engine = nullptr, QJSEngine *scriptEngine = nullptr);
 
     Q_INVOKABLE void disconnectFromCurrentDevice();
+    Q_INVOKABLE void setAutoConnect(int row, bool autoConnect);
 
 private slots:
     // QBluetoothDeviceDiscoveryAgent related

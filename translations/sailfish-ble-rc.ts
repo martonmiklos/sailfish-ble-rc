@@ -153,11 +153,16 @@
         <source>About SailRC</source>
         <translation type="unfinished"></translation>
     </message>
-</context>
-<context>
-    <name>Settings</name>
     <message>
-        <source>Nested Page</source>
+        <source>Disable automatic connect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable automatic connect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit alias</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

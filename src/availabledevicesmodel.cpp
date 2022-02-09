@@ -51,6 +51,8 @@ QVariant AvailableDevicesModel::data(const QModelIndex &index, int role) const
         return index.row();
     case AvailableDevicesModel::Alias:
         return m_devices.at(index.row()).alias();
+    case AvailableDevicesModel::AutoConnect:
+        return m_devices.at(index.row()).autoConnect();
     }
 
     // for desktop
@@ -197,6 +199,12 @@ void AvailableDevicesModel::disconnectFromCurrentDevice()
         m_currentDevice->disconnectFromDevice();
 }
 
+void AvailableDevicesModel::setAutoConnect(int row, bool autoConnect)
+{
+    m_devices[row].setAutoConnect(autoConnect);
+    emit dataChanged(index(row, 0), index(row, 0), QVector<int>({AvailableDevicesModel::AutoConnect}));
+}
+
 bool AvailableDevicesModel::scanInProgress() const
 {
     return m_scanInProgress;
@@ -210,6 +218,7 @@ QHash<int, QByteArray> AvailableDevicesModel::roleNames() const
     roles[ImagePath] = QByteArrayLiteral("ImagePath");
     roles[Name] = QByteArrayLiteral("Name");
     roles[Index] = QByteArrayLiteral("Index");
+    roles[AutoConnect] = QByteArrayLiteral("AutoConnect");
     return roles;
 }
 
@@ -254,6 +263,7 @@ AvailableDevicesModel::DetectedDevice::DetectedDevice(const QBluetoothDeviceInfo
     m_alias = Settings::instance()->alias(m_btInfo.address().toString());
     if (m_alias.isEmpty())
         m_alias = m_btInfo.address().toString();
+    m_autoConnect = Settings::instance()->autoConnect(m_btInfo.address().toString());
 }
 
 QString AvailableDevicesModel::DetectedDevice::name() const
@@ -277,3 +287,17 @@ const QBluetoothDeviceInfo &AvailableDevicesModel::DetectedDevice::btInfo() cons
 {
     return m_btInfo;
 }
+
+bool AvailableDevicesModel::DetectedDevice::autoConnect() const
+{
+    return m_autoConnect;
+}
+
+void AvailableDevicesModel::DetectedDevice::setAutoConnect(bool newAutoConnect)
+{
+    if (newAutoConnect != m_autoConnect) {
+        Settings::instance()->setAutoConnect(m_btInfo.address().toString(), newAutoConnect);
+        m_autoConnect = newAutoConnect;
+    }
+}
+

@@ -32,7 +32,6 @@ SOURCES += \
     src/abstract_rc_car.cpp \
     src/availabledevicesmodel.cpp \
     src/bburago_rc_car.cpp \
-    src/ble_devicescanner.cpp \
     src/ble_rc_car.cpp \
     src/brandbase_rc_car.cpp \
     src/main.cpp \
@@ -47,8 +46,8 @@ DISTFILES += qml/sailfish-ble-rc.qml \
     qml/pages/AboutPage.qml \
     qml/pages/ConnectingPage.qml \
     qml/pages/DrivePage.qml \
-    qml/pages/Settings.qml \
     qml/pages/SearchPage.qml \
+    qml/pages/SettingsPage.qml \
     rpm/sailfish-ble-rc.changes.in \
     rpm/sailfish-ble-rc.changes.run.in \
     rpm/sailfish-ble-rc.spec \
@@ -75,7 +74,6 @@ HEADERS += \
     src/abstract_rc_car.h \
     src/availabledevicesmodel.h \
     src/bburago_rc_car.h \
-    src/ble_devicescanner.h \
     src/ble_rc_car.h \
     src/brandbase_rc_car.h \
     src/settings.h \
