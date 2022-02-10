@@ -46,6 +46,7 @@ DISTFILES += qml/sailfish-ble-rc.qml \
     qml/pages/AboutPage.qml \
     qml/pages/ConnectingPage.qml \
     qml/pages/DrivePage.qml \
+    qml/pages/GadgetEditPage.qml \
     qml/pages/SearchPage.qml \
     qml/pages/SettingsPage.qml \
     rpm/sailfish-ble-rc.changes.in \

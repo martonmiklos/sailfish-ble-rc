@@ -117,6 +117,36 @@
     </message>
 </context>
 <context>
+    <name>DiscoveredRcItem</name>
+    <message>
+        <source>Disable automatic connect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable automatic connect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit alias</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GadgetEditPage</name>
+    <message>
+        <source>Edit gadget details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This text will appear instead of the MAC in search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>QML Virtual Joystick Example</source>
@@ -153,16 +183,15 @@
         <source>About SailRC</source>
         <translation type="unfinished"></translation>
     </message>
+</context>
+<context>
+    <name>SettingsPage</name>
     <message>
-        <source>Disable automatic connect</source>
+        <source>Discover Bluetooth devices on startup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Enable automatic connect</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Edit alias</source>
+        <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

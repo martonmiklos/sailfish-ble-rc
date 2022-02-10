@@ -1,5 +1,7 @@
 #include "abstract_rc_car.h"
 
+#include <QDebug>
+
 AbstractRcCar::AbstractRcCar(QObject *parent) : QObject(parent)
 {
 
@@ -15,6 +17,7 @@ void AbstractRcCar::setConnectionState(AbstractRcCar::ConnectionState state)
     if (state != m_connectionState) {
         auto oldState = m_connectionState;
         m_connectionState = state;
+        qWarning() << state;
         emit connectionStateChanged(oldState, m_connectionState);
     }
 }

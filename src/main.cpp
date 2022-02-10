@@ -3,6 +3,7 @@
 #endif
 
 #include "availabledevicesmodel.h"
+#include "settings.h"
 
 #ifdef Q_OS_ANDROID
 #include <QGuiApplication>
@@ -21,7 +22,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("SailRC");
     QCoreApplication::setApplicationVersion(APP_VERSION);
 
-    QLoggingCategory::setFilterRules(QStringLiteral("qt.bluetooth* = true"));
+    //QLoggingCategory::setFilterRules(QStringLiteral("qt.bluetooth* = true"));
     auto uri = "hu.mm.sailfish_ble_rc";
     // SailfishApp::main() will display "qml/sailfish-ble-rc.qml", if you need more
     // control over initialization, you can use:
@@ -33,7 +34,8 @@ int main(int argc, char *argv[])
     //
     // To display the view, call "show()" (will show fullscreen on device).
 
-    qmlRegisterSingletonType<AvailableDevicesModel>    (uri, 1, 0, "AvailableDevicesModel",  AvailableDevicesModel::qmlInstance);
+    qmlRegisterSingletonType<AvailableDevicesModel>(uri, 1, 0, "AvailableDevicesModel",  AvailableDevicesModel::qmlInstance);
+    qmlRegisterSingletonType<Settings>(uri, 1, 0, "Settings",  Settings::qmlInstance);
     qmlRegisterUncreatableType<AbstractRcCar>(uri, 1, 0, "AbstractRcCar","AbstractRcCar is an abstract type");
 #if defined(Q_OS_ANDROID)
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)

@@ -12,6 +12,19 @@ Page {
         AvailableDevicesModel.disconnectFromCurrentDevice()
     }
 
+    Connections {
+        target: AvailableDevicesModel
+        onCurrentDeviceConnectionStateChanged: {
+            console.log("newState:" + newState)
+            if (newState == AbstractRcCar.Disconnected)
+                pageStack.push(Qt.resolvedUrl("SearchPage.qml"));
+            else if (newState == AbstractRcCar.Connected)
+                pageStack.push(Qt.resolvedUrl("DrivePage.qml"));
+            else if (newState == AbstractRcCar.Connecting)
+                pageStack.push(Qt.resolvedUrl("ConnectingPage.qml"));
+        }
+    }
+
     Component {
         id: detectedDeviceDelegate
         DiscoveredRcItem {
@@ -21,6 +34,7 @@ Page {
             image: ImagePath
             index: Index
             alias: Alias
+            mac: MacAddress
         }
     }
 
@@ -28,11 +42,12 @@ Page {
         PullDownMenu {
             MenuItem {
                 text: qsTr("About SailRC")
-                onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"));
+                onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
             }
 
             MenuItem {
                 text: qsTr("Settings")
+                onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
             }
 
             MenuItem {
@@ -40,7 +55,7 @@ Page {
                       ? qsTr("Discovery in progress...")
                       : qsTr("Discover devices")
                 enabled: !AvailableDevicesModel.scanInProgress
-                onClicked: AvailableDevicesModel.detectDevices()
+                onClicked: AvailableDevicesModel.discoverDevices()
             }
         }
 

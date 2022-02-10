@@ -8,12 +8,12 @@ ListItem {
     property string typeName : ""
     property string image : ""
     property string alias: ""
+    property string mac: ""
     property int index: -1
-    height: row.height + Theme.paddingSmall
+    contentHeight: row.height + Theme.paddingSmall
 
     onClicked: {
-        AvailableDevicesModel.connectToDevice(index)
-        pageStack.push(Qt.resolvedUrl("ConnectingPage.qml"))
+        AvailableDevicesModel.connectToDeviceAt(index)
     }
 
     Row {
@@ -64,7 +64,7 @@ ListItem {
 
             MenuItem {
                 text: qsTr("Edit alias")
-                onClicked: pageStack.push(Qt.resolvedUrl("EditAlias.qml"));
+                onClicked: pageStack.push(Qt.resolvedUrl("GadgetEditPage.qml"), {gadgetMac: detectedDevice.mac});
             }
         }
     }

@@ -21,6 +21,9 @@ AvailableDevicesModel::AvailableDevicesModel(QObject *parent)
             this, SLOT(deviceScanError(QBluetoothDeviceDiscoveryAgent::Error)));
     connect(m_discoveryAgent, SIGNAL(finished()), this, SLOT(deviceScanFinished()));
     connect(m_discoveryAgent, SIGNAL(canceled()), this, SLOT(deviceScanCancelled()));
+
+    if (Settings::instance()->autoDiscoverBlDevices())
+        discoverDevices();
 }
 
 int AvailableDevicesModel::rowCount(const QModelIndex &parent) const
@@ -53,6 +56,8 @@ QVariant AvailableDevicesModel::data(const QModelIndex &index, int role) const
         return m_devices.at(index.row()).alias();
     case AvailableDevicesModel::AutoConnect:
         return m_devices.at(index.row()).autoConnect();
+    case AvailableDevicesModel::MacAddress:
+        return m_devices.at(index.row()).btInfo().address().toString();
     }
 
     // for desktop
@@ -61,7 +66,7 @@ QVariant AvailableDevicesModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-void AvailableDevicesModel::detectDevices()
+void AvailableDevicesModel::discoverDevices()
 {
     if (!m_discoveryAgent)
         return;
@@ -98,6 +103,11 @@ void AvailableDevicesModel::deviceDiscovered(const QBluetoothDeviceInfo & info)
         m_devices.append(d);
         endInsertRows();
     }
+
+    if (Settings::instance()->autoConnect(info.address().toString())) {
+        m_deviceToBeOpenedOnDiscoverCancelled = info.address().toString();
+        cancelDiscovery();
+    }
 }
 
 void AvailableDevicesModel::deviceScanFinished()
@@ -111,7 +121,10 @@ void AvailableDevicesModel::deviceScanFinished()
 
 void AvailableDevicesModel::deviceScanCancelled()
 {
-    connectToDevice(m_deviceToOpenOnDiscoverCancel);
+    if (m_deviceToBeOpenedOnDiscoverCancelled.length()) {
+        connectToDevice(m_deviceToBeOpenedOnDiscoverCancelled);
+        m_deviceToBeOpenedOnDiscoverCancelled.clear();
+    }
 }
 
 void AvailableDevicesModel::deviceScanError(QBluetoothDeviceDiscoveryAgent::Error error)
@@ -218,41 +231,61 @@ QHash<int, QByteArray> AvailableDevicesModel::roleNames() const
     roles[ImagePath] = QByteArrayLiteral("ImagePath");
     roles[Name] = QByteArrayLiteral("Name");
     roles[Index] = QByteArrayLiteral("Index");
+    roles[MacAddress] = QByteArrayLiteral("MacAddress");
     roles[AutoConnect] = QByteArrayLiteral("AutoConnect");
     return roles;
 }
 
-void AvailableDevicesModel::connectToDevice(int deviceIndex)
+void AvailableDevicesModel::cancelDiscovery()
+{
+    setScanInProgress(false);
+    setStatusString(tr("Discovered devices"));
+    m_discoveryAgent->stop();
+}
+
+void AvailableDevicesModel::connectToDevice(const QString &mac)
 {
     if (m_discoveryAgent->isActive()) {
         // deviceScanCancelled will call this function back
-        m_deviceToOpenOnDiscoverCancel = deviceIndex;
-        setScanInProgress(false);
-        setStatusString(tr("Discovered devices"));
-        m_discoveryAgent->stop();
+        m_deviceToBeOpenedOnDiscoverCancelled = mac;
+        cancelDiscovery();
     } else {
-        if (deviceIndex < m_devices.count()) {
-            if (m_currentDevice) {
-                delete m_currentDevice;
-                m_currentDevice = nullptr;
-            }
-            switch (m_devices.at(deviceIndex).type) {
-            case Brandbase:
-            case Bburago:
-                BleRcCar *car = nullptr;
-                if (m_devices.at(deviceIndex).type == Brandbase)
-                    car = new BrandbaseRcCar(m_devices.at(deviceIndex).btInfo(), this);
-                else
-                    car = new BburagoRcCar(m_devices.at(deviceIndex).btInfo(), this);
-                car->connectToDevice();
-                m_currentDevice = car;
-                connect(m_currentDevice, &AbstractRcCar::connectionStateChanged,
-                        this, &AvailableDevicesModel::currentDeviceConnectionStateChangedSlot);
-                connect(m_currentDevice, &AbstractRcCar::connectionStateStringChanged,
-                        this, &AvailableDevicesModel::currentDeviceConnectionStateStringChangedSlot);
+        int deviceIndex = -1, i = 0;
+        for (const auto &device : m_devices) {
+            if (device.btInfo().address().toString() == mac) {
+                deviceIndex = i;
                 break;
             }
+            i++;
         }
+
+        if (deviceIndex == -1)
+            return;
+        if (m_currentDevice) {
+            delete m_currentDevice;
+            m_currentDevice = nullptr;
+        }
+        connectToDeviceAt(deviceIndex);
+    }
+}
+
+void AvailableDevicesModel::connectToDeviceAt(int deviceIndex)
+{
+    switch (m_devices.at(deviceIndex).type) {
+    case Brandbase:
+    case Bburago:
+        BleRcCar *car = nullptr;
+        if (m_devices.at(deviceIndex).type == Brandbase)
+            car = new BrandbaseRcCar(m_devices.at(deviceIndex).btInfo(), this);
+        else
+            car = new BburagoRcCar(m_devices.at(deviceIndex).btInfo(), this);
+        m_currentDevice = car;
+        connect(m_currentDevice, &AbstractRcCar::connectionStateChanged,
+                this, &AvailableDevicesModel::currentDeviceConnectionStateChangedSlot);
+        connect(m_currentDevice, &AbstractRcCar::connectionStateStringChanged,
+                this, &AvailableDevicesModel::currentDeviceConnectionStateStringChangedSlot);
+        car->connectToDevice();
+        break;
     }
 }
 

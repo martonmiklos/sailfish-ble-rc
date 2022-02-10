@@ -24,6 +24,14 @@ Page {
         anchors.topMargin: Theme.paddingSmall
     }
 
+    Connections {
+        target: AvailableDevicesModel
+        onCurrentDeviceConnectionStateStringChanged: {
+            console.log(stateString)
+            connectionStateText.text = stateString
+        }
+    }
+
     BusyIndicator {
         id: busyIndicator
         size: BusyIndicatorSize.Large
@@ -39,20 +47,6 @@ Page {
         onClicked: {
             AvailableDevicesModel.disconnectFromCurrentDevice();
             pageStack.push(Qt.resolvedUrl("SearchPage.qml"));
-        }
-    }
-
-    Connections {
-        target: AvailableDevicesModel
-        onCurrentDeviceConnectionStateChanged: {
-            if (newState == AbstractRcCar.Disconnected)
-                pageStack.push(Qt.resolvedUrl("SearchPage.qml"));
-            else if (newState == AbstractRcCar.Connected)
-                pageStack.push(Qt.resolvedUrl("DrivePage.qml"));
-        }
-        onCurrentDeviceConnectionStateStringChanged: {
-            console.log(stateString)
-            connectionStateText.text = stateString
         }
     }
 }

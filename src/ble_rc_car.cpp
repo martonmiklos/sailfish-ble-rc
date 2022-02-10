@@ -50,7 +50,6 @@ void BleRcCar::disconnectFromDevice()
 
 void BleRcCar::deviceDisconnected()
 {
-
     if (m_reconnecting) {
         m_controller->connectToDevice();
         setConnectionState(Connecting);

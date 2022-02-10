@@ -19,7 +19,8 @@ public:
         Alias,
         ImagePath,
         Index,
-        AutoConnect
+        AutoConnect,
+        MacAddress
     };
 
     enum DeviceType {
@@ -52,12 +53,13 @@ public:
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    Q_INVOKABLE void detectDevices();
+    Q_INVOKABLE void discoverDevices();
 
     bool scanInProgress() const;
     QHash<int, QByteArray> roleNames() const override;
 
-    Q_INVOKABLE void connectToDevice(int deviceIndex);
+    Q_INVOKABLE void connectToDevice(const QString &mac);
+    Q_INVOKABLE void connectToDeviceAt(int row);
 
     Q_INVOKABLE AbstractRcCar *currentDevice() const;
 
@@ -92,6 +94,7 @@ private:
     bool m_scanInProgress = false;
     AbstractRcCar *m_currentDevice = nullptr;
     QString m_statusString;
-    int m_deviceToOpenOnDiscoverCancel = -1;
+    QString m_deviceToBeOpenedOnDiscoverCancelled;
+    void cancelDiscovery();
 };
 
