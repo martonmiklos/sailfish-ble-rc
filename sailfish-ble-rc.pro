@@ -68,7 +68,7 @@ CONFIG += qml_debug
 # planning to localize your app, remember to comment out the
 # following TRANSLATIONS line. And also do not forget to
 # modify the localized app name in the the .desktop file.
-#TRANSLATIONS += translations/sailfish-ble-rc-de.ts
+TRANSLATIONS += translations/sailfish-ble-rc-hu.ts
 
 HEADERS += \
     Qt-AES/qaesencryption.h \

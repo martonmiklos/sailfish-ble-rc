@@ -25,32 +25,22 @@ Page {
             }
 
             LabelText {
-                //: About page text
-                //% "This is a native universal application controlling BLE toy gadgets for Sailfish OS"
-                text: qsTrId("about-description")
+                text: qsTr("This is a native universal application controlling BLE toy gadgets for Sailfish OS")
             }
 
             LabelText {
-                //: About page label
-                //% "Version"
-                label: qsTrId("about-version-label")
+                label: qsTr("Version")
                 text: Qt.application.version
             }
 
             LabelText {
-                //: About page label
-                //% "Author"
-                label: qsTrId("about-author-label")
+                label: qsTr("Author")
                 text: "Miklós Márton"
             }
 
             LabelText {
-                //: About page label
-                //% "Special thanks to"
-                label: qsTrId("about-spec-thanks-label")
-                //: About page text
-                //% "<ahref='https://gist.github.com/scrool'>@scrool</a> for the Brandbase car protocol"
-                text: qsTrId("about-spec-thanks-label-text")
+                label: qsTrId( "Special thanks to")
+                text: qsTrId("<a href='https://gist.github.com/scrool'>@scrool</a> for the Brandbase car protocol")
             }
             Item {
                 width: 1
