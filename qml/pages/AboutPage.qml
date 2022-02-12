@@ -40,7 +40,10 @@ Page {
 
             LabelText {
                 label: qsTrId( "Special thanks to")
-                text: qsTrId("<a href='https://gist.github.com/scrool'>@scrool</a> for the Brandbase car protocol")
+                text: qsTrId('<ul>' +
+                                '<li><a href="https://gist.github.com/scrool">@scrool</a> for the <a href=""https://gist.github.com/scrool/e79d6a4cb50c26499746f4fe473b3768">Brandbase car protocol</a></li>' +
+                                '<li><a href="https://gist.github.com/aaronsnoswell">@aaronsnoswell</a> for the <a href="https://github.com/aaronsnoswell/QMLVirtualJoystick">QMLVirtualJoystick</a> component</li>' +
+                             '</ul>')
             }
             Item {
                 width: 1
