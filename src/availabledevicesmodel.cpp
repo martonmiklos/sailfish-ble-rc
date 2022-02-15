@@ -58,6 +58,8 @@ QVariant AvailableDevicesModel::data(const QModelIndex &index, int role) const
         return m_devices.at(index.row()).autoConnect();
     case AvailableDevicesModel::MacAddress:
         return m_devices.at(index.row()).btInfo().address().toString();
+    case AvailableDevicesModel::Rssi:
+        return m_devices.at(index.row()).btInfo().rssi();
     }
 
     // for desktop
@@ -233,6 +235,7 @@ QHash<int, QByteArray> AvailableDevicesModel::roleNames() const
     roles[Index] = QByteArrayLiteral("Index");
     roles[MacAddress] = QByteArrayLiteral("MacAddress");
     roles[AutoConnect] = QByteArrayLiteral("AutoConnect");
+    roles[Rssi] = QByteArrayLiteral("Rssi");
     return roles;
 }
 

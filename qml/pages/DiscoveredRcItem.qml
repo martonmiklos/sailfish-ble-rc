@@ -66,6 +66,11 @@ ListItem {
                 text: qsTr("Edit alias")
                 onClicked: pageStack.push(Qt.resolvedUrl("GadgetEditPage.qml"), {gadgetMac: detectedDevice.mac});
             }
+
+            MenuItem {
+                text: qsTr("Device info")
+                onClicked: pageStack.push(Qt.resolvedUrl("GadgetInfoPage.qml"), {gadgetMac: detectedDevice.mac});
+            }
         }
     }
 }

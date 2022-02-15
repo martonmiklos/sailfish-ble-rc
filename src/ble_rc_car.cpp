@@ -79,6 +79,11 @@ QString BleRcCar::connectionStateString() const
     return m_connectionStateString;
 }
 
+QString BleRcCar::identifier() const
+{
+    return m_carInfo.address().toString();
+}
+
 QString BleRcCar::errorString() const
 {
     return m_errorString;

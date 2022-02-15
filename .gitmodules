@@ -4,3 +4,6 @@
 [submodule "Qt-AES"]
 	path = Qt-AES
 	url = git@github.com:bricke/Qt-AES.git
+[submodule "qt_goodies"]
+	path = qt_goodies
+	url = git@github.com:martonmiklos/qt_goodies.git

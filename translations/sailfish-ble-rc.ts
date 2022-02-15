@@ -3,29 +3,27 @@
 <TS version="2.1">
 <context>
     <name></name>
-    <message id="about-description">
+    <message id="Special thanks to">
+        <source></source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="<ul><li><a href="https://gist.github.com/scrool">@scrool</a> for the <a href=""https://gist.github.com/scrool/e79d6a4cb50c26499746f4fe473b3768">Brandbase car protocol</a></li><li><a href="https://gist.github.com/aaronsnoswell">@aaronsnoswell</a> for the <a href="https://github.com/aaronsnoswell/QMLVirtualJoystick">QMLVirtualJoystick</a> component</li></ul>">
+        <source></source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AboutPage</name>
+    <message>
         <source>This is a native universal application controlling BLE toy gadgets for Sailfish OS</source>
-        <extracomment>About page text</extracomment>
         <translation type="unfinished"></translation>
     </message>
-    <message id="about-version-label">
+    <message>
         <source>Version</source>
-        <extracomment>About page label</extracomment>
         <translation type="unfinished"></translation>
     </message>
-    <message id="about-author-label">
+    <message>
         <source>Author</source>
-        <extracomment>About page label</extracomment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="about-spec-thanks-label">
-        <source>Special thanks to</source>
-        <extracomment>About page label</extracomment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="about-spec-thanks-label-text">
-        <source>&lt;ahref=&apos;https://gist.github.com/scrool&apos;&gt;@scrool&lt;/a&gt; for the Brandbase car protocol</source>
-        <extracomment>About page text</extracomment>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -192,6 +190,10 @@
     </message>
     <message>
         <source>Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Left handed operation</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -7,6 +7,7 @@ Page {
 
     allowedOrientations: Orientation.All
 
+
     Column {
         spacing: 10
         anchors.fill: parent
@@ -19,6 +20,14 @@ Page {
             text: qsTr("Discover Bluetooth devices on startup")
             onCheckedChanged: {
                 Settings.setAutoDiscoverBlDevices(autoDiscoverBt.checked)
+            }
+        }
+        TextSwitch {
+            id: leftHandedOperation
+            checked: Settings.leftHandedOperation
+            text: qsTr("Left handed operation")
+            onCheckedChanged: {
+                Settings.setLeftHandedOperation(leftHandedOperation.checked)
             }
         }
     }

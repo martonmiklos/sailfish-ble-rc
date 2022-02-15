@@ -29,6 +29,7 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\" \
 
 SOURCES += \
     Qt-AES/qaesencryption.cpp \
+    qt_goodies/durationformatter.cpp \
     src/abstract_rc_car.cpp \
     src/availabledevicesmodel.cpp \
     src/bburago_rc_car.cpp \
@@ -45,15 +46,17 @@ DISTFILES += qml/sailfish-ble-rc.qml \
     qml/cover/CoverPage.qml \
     qml/pages/AboutPage.qml \
     qml/pages/ConnectingPage.qml \
+    qml/pages/DiscoveredRcItem.qml \
     qml/pages/DrivePage.qml \
     qml/pages/GadgetEditPage.qml \
+    qml/pages/GadgetInfoPage.qml \
     qml/pages/SearchPage.qml \
     qml/pages/SettingsPage.qml \
     rpm/sailfish-ble-rc.changes.in \
     rpm/sailfish-ble-rc.changes.run.in \
     rpm/sailfish-ble-rc.spec \
     rpm/sailfish-ble-rc.yaml \
-    translations/*.ts \
+    translations/*.qm \
     sailfish-ble-rc.desktop
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
@@ -72,6 +75,7 @@ TRANSLATIONS += translations/sailfish-ble-rc-hu.ts
 
 HEADERS += \
     Qt-AES/qaesencryption.h \
+    qt_goodies/durationformatter.h \
     src/abstract_rc_car.h \
     src/availabledevicesmodel.h \
     src/bburago_rc_car.h \
@@ -82,4 +86,8 @@ HEADERS += \
 
 RESOURCES += \
     resources.qrc
+
+lupdate_only{
+SOURCES = qml/pages/*.qml
+}
 

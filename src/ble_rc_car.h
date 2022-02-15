@@ -19,7 +19,7 @@ public:
 
     void setDevInfo(const QBluetoothDeviceInfo &newDevInfo);
     QString connectionStateString() const override;
-
+    QString identifier() const override;
 protected slots:
     virtual void send() = 0;
 

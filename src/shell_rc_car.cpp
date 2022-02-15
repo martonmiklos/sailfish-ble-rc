@@ -21,6 +21,7 @@ bool ShellRcCar::isFeatureSupported(AbstractRcCar::Feature feature) const
 
 void ShellRcCar::setThrottle(float throttle)
 {
+    AbstractRcCar::setThrottle(throttle);
     if (throttle > m_deadband) {
         m_forward = true;
         m_backward = false;
@@ -105,10 +106,8 @@ void ShellRcCar::controlServiceDetailsDiscovered(QLowEnergyService::ServiceState
     if (newState != QLowEnergyService::ServiceDiscovered)
         return;
 
-    qWarning() << "Control service discovered" << newState;
     m_controlCharacteristics = m_controlService->characteristic(controlCharacteristicsUuid());
     if (m_controlCharacteristics.isValid()) {
-        qWarning() << "Connected!";
         setConnectionState(Connected);
         m_sendTimer.start();
     } else {

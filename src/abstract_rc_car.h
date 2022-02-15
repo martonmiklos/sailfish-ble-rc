@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QVariant>
+#include <QElapsedTimer>
 
 class AbstractRcCar : public QObject
 {
@@ -22,11 +23,12 @@ public:
     Q_ENUM(Feature)
 
     explicit AbstractRcCar(QObject *parent = nullptr);
+
     /**
      * @brief setThrottle
      * @param throttle -1 to 1 range
      */
-    Q_INVOKABLE virtual void setThrottle(float throttle) = 0;
+    Q_INVOKABLE virtual void setThrottle(float throttle);
 
     /**
      * @brief setSteer
@@ -47,6 +49,7 @@ public:
 
     Q_INVOKABLE virtual QString name() const = 0;
     virtual QString connectionStateString() const = 0;
+    virtual QString identifier() const = 0;
 
     virtual bool connectToDevice() = 0;
     virtual void disconnectFromDevice() = 0;
@@ -57,6 +60,8 @@ signals:
 
 protected:
     ConnectionState m_connectionState = Disconnected;
-    void setConnectionState(ConnectionState state);
+    virtual void setConnectionState(ConnectionState newState);
+    QElapsedTimer m_connectionTimeTimer, m_runTimer;
+    quint32 m_runTimeIn_ms = 0;
 };
 

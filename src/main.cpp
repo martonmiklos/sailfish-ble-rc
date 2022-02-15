@@ -3,6 +3,7 @@
 #endif
 
 #include "availabledevicesmodel.h"
+#include "qt_goodies/durationformatter.h"
 #include "settings.h"
 
 #ifdef Q_OS_ANDROID
@@ -13,7 +14,6 @@
 #endif
 
 #include <QLoggingCategory>
-
 
 int main(int argc, char *argv[])
 {
@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterSingletonType<AvailableDevicesModel>(uri, 1, 0, "AvailableDevicesModel",  AvailableDevicesModel::qmlInstance);
     qmlRegisterSingletonType<Settings>(uri, 1, 0, "Settings",  Settings::qmlInstance);
-    qmlRegisterUncreatableType<AbstractRcCar>(uri, 1, 0, "AbstractRcCar","AbstractRcCar is an abstract type");
+    qmlRegisterUncreatableType<AbstractRcCar>(uri, 1, 0, "AbstractRcCar", "AbstractRcCar is an abstract type");
 #if defined(Q_OS_ANDROID)
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);

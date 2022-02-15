@@ -13,6 +13,10 @@ App for controlling a BLE toy cars from a Sailfish OS device
 * Reverse engineering is fun!
 * Planning support for USB-OTG game controllers
 
+## "Killer features"
+* Selectable right/left handed operation (f*ck the hardcoded left handed mode Brandbase!)
+* Gadget uptime/runtime calculation
+
 ## Supported devices
 
 * [Nissan Formula E manufactured by Brandbase used by Shell in promotional campagin](https://gist.github.com/martonmiklos/e960f17d7ba0f08327b0b588f9aae04b)

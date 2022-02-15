@@ -20,7 +20,8 @@ public:
         ImagePath,
         Index,
         AutoConnect,
-        MacAddress
+        MacAddress,
+        Rssi
     };
 
     enum DeviceType {

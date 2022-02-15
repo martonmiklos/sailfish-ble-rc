@@ -13,15 +13,20 @@ Page {
     allowedOrientations: Orientation.Landscape | Orientation.LandscapeInverted
 
     VirtualJoystick {
-        id: throttle
-        verticalOnly: true
+        id: leftStick
+        verticalOnly: !Settings.leftHandedOperation
+        horizontalOnly: Settings.leftHandedOperation
         height: page.height / 2
         anchors.left: parent.left
         anchors.leftMargin: Theme.paddingSmall
         anchors.verticalCenter: parent.verticalCenter
         onJoystick_moved: {
-            if (AvailableDevicesModel.currentDevice() !== null)
-            AvailableDevicesModel.currentDevice().setThrottle(y)
+            if (AvailableDevicesModel.currentDevice() !== null) {
+                if (Settings.leftHandedOperation)
+                    AvailableDevicesModel.currentDevice().setSteer(x)
+                else
+                    AvailableDevicesModel.currentDevice().setThrottle(y)
+            }
         }
     }
 
@@ -111,15 +116,19 @@ Page {
     }
 
     VirtualJoystick {
-        id: steer
-        horizontalOnly: true
+        id: rightStick
+        verticalOnly: Settings.leftHandedOperation
+        horizontalOnly: !Settings.leftHandedOperation
         height: page.height / 2
         anchors.right: parent.right
         anchors.rightMargin: Theme.paddingSmall
         anchors.verticalCenter: parent.verticalCenter
         onJoystick_moved: {
             if (AvailableDevicesModel.currentDevice() !== null)
-                AvailableDevicesModel.currentDevice().setSteer(x)
+                if (!Settings.leftHandedOperation)
+                    AvailableDevicesModel.currentDevice().setSteer(x)
+                else
+                    AvailableDevicesModel.currentDevice().setThrottle(y)
         }
     }
 }
