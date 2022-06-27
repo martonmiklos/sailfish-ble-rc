@@ -15,7 +15,6 @@ Page {
     Connections {
         target: AvailableDevicesModel
         onCurrentDeviceConnectionStateChanged: {
-            console.log("newState:" + newState)
             if (newState == AbstractRcCar.Disconnected)
                 pageStack.push(Qt.resolvedUrl("SearchPage.qml"));
             else if (newState == AbstractRcCar.Connected)
