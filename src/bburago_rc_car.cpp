@@ -116,7 +116,7 @@ void BburagoRcCar::batteryServiceDetailsDiscovered(QLowEnergyService::ServiceSta
     if (newState == QLowEnergyService::ServiceDiscovered) {
         auto batteryCharacteristic = m_batteryService->characteristic(BATTERY_CHARACTERISTICS_UUID);
         if (batteryCharacteristic.isValid()) {
-            QLowEnergyDescriptor notification = batteryCharacteristic.descriptor(QBluetoothUuid::ClientCharacteristicConfiguration);
+            QLowEnergyDescriptor notification = batteryCharacteristic.descriptor(QBluetoothUuid::DescriptorType::ClientCharacteristicConfiguration);
             if (notification.isValid()) {
                 m_batteryService->writeDescriptor(notification, QByteArray::fromHex("0100"));
                 connect(m_batteryService, &QLowEnergyService::characteristicChanged,
