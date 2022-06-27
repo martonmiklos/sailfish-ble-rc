@@ -14,7 +14,7 @@ App for controlling a BLE toy cars from a Sailfish OS device
 * Planning support for USB-OTG game controllers
 
 ## "Killer features"
-* Selectable right/left handed operation (f*ck the hardcoded left handed mode Brandbase!)
+* Selectable right/left handed operation (I hated hardcoded left handed mode Brandbase app!)
 * Gadget uptime/runtime calculation
 
 ## Supported devices
@@ -38,3 +38,7 @@ Protocol is quite simple:
 Command is sent in 8 byte to the "0000fff1-0000-1000-8000-00805f9b34fb" characteristics [see this code for details.](https://github.com/martonmiklos/sailfish-ble-rc/blob/master/src/bburago_rc_car.cpp#L81)
 
 The battery notification is sent periodically through the "00002a19-0000-1000-8000-00805f9b34fb" characteristic in a single byte in percentage format. (You need to enable notifications to this characteristics see: [here](https://github.com/martonmiklos/sailfish-ble-rc/blob/master/src/bburago_rc_car.cpp#L112)
+
+## Planned devices 
+* DJI Tello drone
+* Parrot Sumo "drone"
