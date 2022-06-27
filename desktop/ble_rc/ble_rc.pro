@@ -1,7 +1,7 @@
-QT       += core gui
+QT       += core gui widgets bluetooth qml
 
 INCLUDEPATH += ../../
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets bluetooth qml
+INCLUDEPATH += ../../src
 
 CONFIG += c++11
 
@@ -11,25 +11,27 @@ CONFIG += c++11
 
 SOURCES += \
     ../../Qt-AES/qaesencryption.cpp \
-    ../../abstract_rc_car.cpp \
-    ../../availabledevicesmodel.cpp \
-    ../../bburago_rc_car.cpp \
-    ../../ble_devicescanner.cpp \
-    ../../ble_rc_car.cpp \
-    ../../brandbase_rc_car.cpp \
-    ../../shell_rc_car.cpp \
+    ../../qt_goodies/durationformatter.cpp \
+    ../../src/abstract_rc_car.cpp \
+    ../../src/availabledevicesmodel.cpp \
+    ../../src/bburago_rc_car.cpp \
+    ../../src/ble_rc_car.cpp \
+    ../../src/brandbase_rc_car.cpp \
+    ../../src/settings.cpp \
+    ../../src/shell_rc_car.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     ../../Qt-AES/qaesencryption.h \
-    ../../abstract_rc_car.h \
-    ../../availabledevicesmodel.h \
-    ../../bburago_rc_car.h \
-    ../../ble_devicescanner.h \
-    ../../ble_rc_car.h \
-    ../../brandbase_rc_car.h \
-    ../../shell_rc_car.h \
+    ../../qt_goodies/durationformatter.h \
+    ../../src/abstract_rc_car.h \
+    ../../src/availabledevicesmodel.h \
+    ../../src/bburago_rc_car.h \
+    ../../src/ble_rc_car.h \
+    ../../src/brandbase_rc_car.h \
+    ../../src/settings.h \
+    ../../src/shell_rc_car.h \
     mainwindow.h
 
 FORMS += \
